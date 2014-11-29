@@ -123,8 +123,9 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer, uint32_t start, uint
 	startNuc = (startByte - packedpos_) * 4;
 	endNuc = (endByte - packedpos_) * 4;
 	
+	// nuke buffer and resize
 	buffer.clear();
-	buffer.reserve(endNuc - startNuc + 1); // +1?
+	buffer.reserve(endNuc - startNuc);
 
 	// reading starts here.
 	uint32_t seqPos = startNuc;
