@@ -76,7 +76,8 @@ public:
 	TwoBitSequence& operator=(const TwoBitSequence& other) = delete;
 
 	void test();
-	void getSequence(std::vector<char>& buffer, uint32_t start, uint32_t end);
+	void getSequence(std::vector<char>& buffer, const uint32_t& start,
+			const uint32_t& end, const bool revcomp=false);
 
 };
 

@@ -20,6 +20,7 @@
 
 #include "Exception.hpp"
 #include <iostream>
+#include <algorithm>
 
 namespace TwoBit
 {
@@ -44,7 +45,7 @@ void TwoBitFile::readHeader()
 		}
 		else
 		{
-			throw Exception("Invalid magic number.");
+			throw Exception("Invalid magic number. Bad 2-bit file.");
 		}
 	}
 	else
@@ -109,11 +110,21 @@ void TwoBitFile::test()
 
 	std::vector<char> myseq;
 //	sequences_["chrUn_gl000215"]->getSequence(myseq, 0, 20000);
-	sequences_["chr1"]->getSequence(myseq, 0, 2000000000);
+	sequences_["chr1"]->getSequence(myseq, 20000, 20100, false);
+//	sequences_["chrXIII"]->getSequence(myseq, 0, 2000000000);
 	//std::cout << std::string(myseq.begin(), myseq.end()) << std::endl;
 
 	std::cout << "myseq.size(): " << myseq.size() << std::endl;
 	std::cout << "myseq.capacity(): " << myseq.capacity() << std::endl;
+
+	//std::reverse(myseq.begin(), myseq.end());
+
+
+	sequences_["chr1"]->getSequence(myseq, 15000, 15020, false);
+	std::cout << std::string(myseq.begin(), myseq.end()) << std::endl;
+	sequences_["chr1"]->getSequence(myseq, 15000, 15020, true);
+	std::cout << std::string(myseq.begin(), myseq.end()) << std::endl;
+
 
 	unsigned char x = 6;
 	std::cout << (x << 2) << std::endl;

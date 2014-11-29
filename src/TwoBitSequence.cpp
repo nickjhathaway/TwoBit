@@ -105,11 +105,14 @@ void TwoBitSequence::test()
 	std::cout << "filename_: " << filename_ << std::endl;
 }
 
-void TwoBitSequence::getSequence(std::vector<char>& buffer, uint32_t start, uint32_t end)
+void TwoBitSequence::getSequence(std::vector<char>& buffer,
+		const uint32_t& start, const uint32_t& end, const bool revcomp)
 {
 	// alphabet for masked and unmasked sequence.
-	const char upper[5] = {'T', 'C', 'A', 'G', 'N'};
-	const char lower[5] = {'t', 'c', 'a', 'g', 'n'};
+	const char upperfw[5] = {'T', 'C', 'A', 'G', 'N'};
+	const char upperrv[5] = {'A', 'G', 'T', 'C', 'N'};
+	const char lowerfw[5] = {'t', 'c', 'a', 'g', 'n'};
+	const char lowerrv[5] = {'a', 'g', 't', 'c', 'n'};
 
 	// clean start and end (that is: start < end <= dnasize)
 	uint32_t startNuc = std::min(dnaSize_ - 1, start);
@@ -125,7 +128,7 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer, uint32_t start, uint
 	
 	// nuke buffer and resize
 	buffer.clear();
-	buffer.reserve(endNuc - startNuc);
+	buffer.resize(endNuc - startNuc);
 
 	// reading starts here.
 	uint32_t seqPos = startNuc;
@@ -136,6 +139,8 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer, uint32_t start, uint
 	int n = 0;
 	uint32_t prevm = 0;
 	uint32_t prevn = 0;
+	uint32_t mregionsize = mRegions.size();
+	uint32_t nregionsize = nRegions.size();
 
 	file_.seekg(filePos);
 	while (filePos < endByte) {
@@ -148,15 +153,14 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer, uint32_t start, uint
 		{
 			for (uint32_t j = 0; j < 8; j += 2)
 			{
-
 				// fast-forward N-regions to figure out whether we need to return N's or sequence.
-				while (prevn < nRegions.size() && nRegions[prevn].pos_ <= seqPos)
+				while (prevn < nregionsize && nRegions[prevn].pos_ <= seqPos)
 				{
 					n += nRegions[prevn++].action_;
 				}
 
 				// fast-forward mask-regions to figure out whether or not we need to mask.
-				while (prevm < mRegions.size() && mRegions[prevm].pos_ <= seqPos)
+				while (prevm < mregionsize && mRegions[prevm].pos_ <= seqPos)
 				{
 					m += mRegions[prevm++].action_;
 				}
@@ -165,27 +169,43 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer, uint32_t start, uint
 				if (m == 0 && n == 0)
 				{
 					// no mask, no N
-					buffer.push_back(upper[(buffer_[i] >> (6 - j)) & 0x03]);
+					if (revcomp) {
+						buffer[endNuc - seqPos - 1] = upperrv[(buffer_[i] >> (6 - j)) & 0x03];
+					} else {
+						buffer[seqPos - startNuc] = upperfw[(buffer_[i] >> (6 - j)) & 0x03];
+					}
 				}
 				else if (m == 0 && n > 0)
 				{
 					// no mask, but N
-					buffer.push_back(upper[4]);
+					if (revcomp) {
+						buffer[endNuc - seqPos - 1] = upperrv[4];
+					} else {
+						buffer[seqPos - startNuc] = upperfw[4];
+					}
 				}
 				else if (m > 0 && n == 0)
 				{
 					// mask, no N
-					buffer.push_back(lower[(buffer_[i] >> (6 - j)) & 0x03]);
+					if (revcomp) {
+						buffer[endNuc - seqPos - 1] = lowerrv[(buffer_[i] >> (6 - j)) & 0x03];
+					} else {
+						buffer[seqPos - startNuc] = lowerfw[(buffer_[i] >> (6 - j)) & 0x03];
+					}
 				}
 				else if (m > 0 && n > 0)
 				{
 					// masked N (should not happen I guess)
-					buffer.push_back(lower[4]);
+					if (revcomp) {
+						buffer[endNuc - seqPos - 1] = lowerrv[4];
+					} else {
+						buffer[seqPos - startNuc] = lowerfw[4];
+					}
 				} else {
 					// negative values for m or n means something's not quite right.
 					throw Exception("Error parsing regions.");
 				}
-				seqPos++;
+				++seqPos;
 			}
 		}
 	}
