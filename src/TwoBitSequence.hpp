@@ -14,6 +14,8 @@
  limitations under the License.
  */
 
+// see http://genome.ucsc.edu/FAQ/FAQformat#format7
+
 #pragma once
 
 #include <string>
