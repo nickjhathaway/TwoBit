@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # this should work
 uname -a | grep -v Darwin >/dev/null && exit 0

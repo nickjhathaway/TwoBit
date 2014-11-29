@@ -24,6 +24,8 @@
 namespace TwoBit
 {
 
+const uint32_t TwoBitSequence::BUFFER_SIZE;
+
 TwoBitSequence::TwoBitSequence(const std::string& name, const uint32_t offset,
 		TwoBitFile& file) :
 		name_(name), offset_(offset), filename_(file.filename_), swapped_(
