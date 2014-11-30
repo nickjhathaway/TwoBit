@@ -35,7 +35,7 @@ class TwoBitSequence
 {
 private:
 
-	static const uint32_t BUFFER_SIZE = 0x10000; // 64k
+	static const uint32_t BUFFER_SIZE = 0x1000; //4k
 
 	std::ifstream file_;
 	const SequenceMeta& meta_;
@@ -69,8 +69,9 @@ public:
 	TwoBitSequence& operator=(const TwoBitSequence& other) = delete;
 
 	// get sequence, from start to end, optionally in reverse-complement
-	void getSequence(std::vector<char>& buffer, const uint32_t& start,
-			const uint32_t& end, const bool reverseComplement = false);
+	void getSequence(std::vector<char>& buffer, const uint32_t& start = 0,
+			const uint32_t& end = 0, const bool reverseComplement = false,
+			const bool doMask = true);
 
 	// get reference to metadata
 	const SequenceMeta& getMetadata() const;

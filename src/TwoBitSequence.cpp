@@ -25,7 +25,8 @@ namespace TwoBit
 const uint32_t TwoBitSequence::BUFFER_SIZE;
 
 void TwoBitSequence::getSequence(std::vector<char>& buffer,
-		const uint32_t& start, const uint32_t& end, const bool reverseComplement)
+		const uint32_t& start, const uint32_t& end,
+		const bool reverseComplement, const bool doMask)
 {
 
 	// alphabet for masked and unmasked sequence.
@@ -38,9 +39,20 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 	const char lowerrv[5] =
 	{ 'a', 'g', 't', 'c', 'n' };
 
+	uint32_t startNuc;
+	uint32_t endNuc;
+
 	// clean start and end (that is: start < end <= dnasize)
-	uint32_t startNuc = std::min(meta_.dnaSize_ - 1, start);
-	uint32_t endNuc = std::max(startNuc + 1, std::min(meta_.dnaSize_, end)); // < dnaSize, > startNuc.
+	if (start == 0 && end == 0)
+	{
+		startNuc = 0; // if both are 0, take entire sequence
+		endNuc = meta_.dnaSize_;
+	}
+	else
+	{
+		startNuc = std::min(meta_.dnaSize_ - 1, start);
+		endNuc = std::max(startNuc + 1, std::min(meta_.dnaSize_, end)); // < dnaSize, > startNuc
+	}
 
 	// calculate byte positions in file.
 	uint32_t startByte = meta_.packedPos_ + (startNuc / 4);
@@ -63,8 +75,9 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 	int n = 0;
 	uint32_t prevm = 0;
 	uint32_t prevn = 0;
-	uint32_t mregionsize = meta_.mRegions.size();
-	uint32_t nregionsize = meta_.nRegions.size();
+	const uint32_t mregionsize = meta_.mRegions.size();
+	const uint32_t nregionsize = meta_.nRegions.size();
+
 	file_.seekg(filePos);
 	while (filePos < endByte)
 	{
@@ -94,7 +107,7 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 					m += meta_.mRegions[prevm++].action_;
 				}
 				// translate 2-bit to sequence.
-				if (m == 0 && n == 0)
+				if (m == 0 && doMask && n == 0)
 				{
 					// no mask, no N
 					if (reverseComplement)
@@ -108,7 +121,7 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 								>> (6 - j)) & 0x03];
 					}
 				}
-				else if (m == 0 && n > 0)
+				else if (m == 0 && doMask && n > 0)
 				{
 					// no mask, but N
 					if (reverseComplement)
@@ -120,7 +133,7 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 						buffer[seqPos - startNuc] = upperfw[4];
 					}
 				}
-				else if (m > 0 && n == 0)
+				else if ((m > 0 || !doMask) && n == 0)
 				{
 					// mask, no N
 					if (reverseComplement)
@@ -134,7 +147,7 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 								>> (6 - j)) & 0x03];
 					}
 				}
-				else if (m > 0 && n > 0)
+				else if ((m > 0 || !doMask) && n > 0)
 				{
 					// masked N (should not happen I guess)
 					if (reverseComplement)
