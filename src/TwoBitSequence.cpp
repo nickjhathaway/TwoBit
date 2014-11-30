@@ -25,7 +25,7 @@ namespace TwoBit
 const uint32_t TwoBitSequence::BUFFER_SIZE;
 
 void TwoBitSequence::getSequence(std::vector<char>& buffer,
-		const uint32_t& start, const uint32_t& end, const bool revcomp)
+		const uint32_t& start, const uint32_t& end, const bool reverseComplement)
 {
 
 	// alphabet for masked and unmasked sequence.
@@ -97,7 +97,7 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 				if (m == 0 && n == 0)
 				{
 					// no mask, no N
-					if (revcomp)
+					if (reverseComplement)
 					{
 						buffer[endNuc - seqPos - 1] = upperrv[(buffer_[i]
 								>> (6 - j)) & 0x03];
@@ -111,7 +111,7 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 				else if (m == 0 && n > 0)
 				{
 					// no mask, but N
-					if (revcomp)
+					if (reverseComplement)
 					{
 						buffer[endNuc - seqPos - 1] = upperrv[4];
 					}
@@ -123,7 +123,7 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 				else if (m > 0 && n == 0)
 				{
 					// mask, no N
-					if (revcomp)
+					if (reverseComplement)
 					{
 						buffer[endNuc - seqPos - 1] = lowerrv[(buffer_[i]
 								>> (6 - j)) & 0x03];
@@ -137,7 +137,7 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 				else if (m > 0 && n > 0)
 				{
 					// masked N (should not happen I guess)
-					if (revcomp)
+					if (reverseComplement)
 					{
 						buffer[endNuc - seqPos - 1] = lowerrv[4];
 					}
@@ -157,7 +157,7 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 	}
 }
 
-const SequenceMeta& TwoBitSequence::getMeta() const
+const SequenceMeta& TwoBitSequence::getMetadata() const
 {
 	return meta_;
 }

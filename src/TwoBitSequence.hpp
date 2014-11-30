@@ -43,14 +43,14 @@ private:
 
 	friend class TwoBitFile;
 
+	// make it "printable"
+	friend std::ostream& ::operator<<(std::ostream& s, const TwoBitSequence& x);
+
 	TwoBitSequence(const SequenceMeta& meta) :
 			meta_(meta)
 	{
 		file_.open(meta_.filename_, std::ios::in | std::ios::binary);
 	}
-
-	// make it "printable"
-	friend std::ostream& ::operator<<(std::ostream& s, const TwoBitSequence& x);
 
 public:
 
@@ -63,16 +63,17 @@ public:
 			TwoBitSequence(other.meta_)
 	{
 	}
-	;
 
 	// delete some stuff.
 	TwoBitSequence() = delete;
 	TwoBitSequence& operator=(const TwoBitSequence& other) = delete;
 
+	// get sequence, from start to end, optionally in reverse-complement
 	void getSequence(std::vector<char>& buffer, const uint32_t& start,
-			const uint32_t& end, const bool revcomp = false);
+			const uint32_t& end, const bool reverseComplement = false);
 
-	const SequenceMeta& getMeta() const;
+	// get reference to metadata
+	const SequenceMeta& getMetadata() const;
 
 };
 
