@@ -24,12 +24,11 @@
 #include <memory>
 
 #include "TwoBitFile.hpp"
-// #include "Region.hpp"
 
 namespace TwoBit
 {
 
-class TwoBitSequence
+class TwoBitSequenceMeta
 {
 private:
 
@@ -66,14 +65,14 @@ private:
 
 public:
 
-	TwoBitSequence(const std::string& name, const uint32_t offset,
+	TwoBitSequenceMeta(const std::string& name, const uint32_t offset,
 			TwoBitFile& file);
 
-	virtual ~TwoBitSequence();
+	virtual ~TwoBitSequenceMeta();
 
-	TwoBitSequence(const TwoBitSequence& other) = delete;
-	TwoBitSequence() = delete;
-	TwoBitSequence& operator=(const TwoBitSequence& other) = delete;
+	TwoBitSequenceMeta(const TwoBitSequenceMeta& other) = delete;
+	TwoBitSequenceMeta() = delete;
+	TwoBitSequenceMeta& operator=(const TwoBitSequenceMeta& other) = delete;
 
 	void test();
 	void getSequence(std::vector<char>& buffer, const uint32_t& start,

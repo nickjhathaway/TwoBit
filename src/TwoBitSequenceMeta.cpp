@@ -17,16 +17,16 @@
 #include <iostream>
 #include <algorithm>
 
-#include "TwoBitSequence.hpp"
+#include "TwoBitSequenceMeta.hpp"
 #include "TwoBitFile.hpp"
 #include "TwoBitUtil.hpp"
 
 namespace TwoBit
 {
 
-const uint32_t TwoBitSequence::BUFFER_SIZE;
+const uint32_t TwoBitSequenceMeta::BUFFER_SIZE;
 
-TwoBitSequence::TwoBitSequence(const std::string& name, const uint32_t offset,
+TwoBitSequenceMeta::TwoBitSequenceMeta(const std::string& name, const uint32_t offset,
 		TwoBitFile& file) :
 		name_(name), offset_(offset), filename_(file.filename_), swapped_(
 				file.swapped_), dnaSize_(0), dnaBytes_(0), packedpos_(0)
@@ -34,27 +34,31 @@ TwoBitSequence::TwoBitSequence(const std::string& name, const uint32_t offset,
 	open();
 }
 
-TwoBitSequence::~TwoBitSequence()
+TwoBitSequenceMeta::~TwoBitSequenceMeta()
 {
 	close();
 }
 
-void TwoBitSequence::readRegions(std::vector<Region>& out)
+void TwoBitSequenceMeta::readRegions(std::vector<Region>& out)
 {
 	uint32_t count;
-	count = nextInt(file_, swapped_);
 	std::vector<uint32_t> starts;
 	std::vector<uint32_t> lengths;
 
+	count = nextInt(file_, swapped_);
 	for (uint32_t i = 0; i < count; ++i)
 	{
+		// read starts of regions
 		starts.emplace_back(nextInt(file_, swapped_));
 	}
 	for (uint32_t i = 0; i < count; ++i)
 	{
+		// read lengths of regions
 		lengths.emplace_back(nextInt(file_, swapped_));
 	}
 
+	// transform into a usable structure.
+	// {(0, 0), (start, 1), (end, -1), (start, 1), (end, -1), ...}
 	out.clear();
 	out.reserve(count * 2);
 	out.emplace_back(0, 0); // filler, makes logic a little easier
@@ -63,14 +67,13 @@ void TwoBitSequence::readRegions(std::vector<Region>& out)
 		out.emplace_back(starts[i], 1);
 		out.emplace_back(starts[i] + lengths[i], -1);
 	}
-
-	std::sort(out.begin(), out.end(), [](const Region& a, const Region& b)
+	std::sort(out.begin() + 1, out.end(), [](const Region& a, const Region& b)
 	{
 		return a.pos_ < b.pos_;
 	});
 }
 
-void TwoBitSequence::open()
+void TwoBitSequenceMeta::open()
 {
 	// open file, seek to offset and read sequence meta data.
 	file_.open(filename_, std::ios::in | std::ios::binary);
@@ -92,12 +95,12 @@ void TwoBitSequence::open()
 	packedpos_ = file_.tellg();
 }
 
-void TwoBitSequence::close()
+void TwoBitSequenceMeta::close()
 {
 	file_.close();
 }
 
-void TwoBitSequence::test()
+void TwoBitSequenceMeta::test()
 {
 	std::cout << "name_: " << name_ << std::endl;
 	std::cout << "offset_: " << offset_ << std::endl;
@@ -105,19 +108,23 @@ void TwoBitSequence::test()
 	std::cout << "filename_: " << filename_ << std::endl;
 }
 
-void TwoBitSequence::getSequence(std::vector<char>& buffer,
+void TwoBitSequenceMeta::getSequence(std::vector<char>& buffer,
 		const uint32_t& start, const uint32_t& end, const bool revcomp)
 {
 	// alphabet for masked and unmasked sequence.
-	const char upperfw[5] = {'T', 'C', 'A', 'G', 'N'};
-	const char upperrv[5] = {'A', 'G', 'T', 'C', 'N'};
-	const char lowerfw[5] = {'t', 'c', 'a', 'g', 'n'};
-	const char lowerrv[5] = {'a', 'g', 't', 'c', 'n'};
+	const char upperfw[5] =
+	{ 'T', 'C', 'A', 'G', 'N' };
+	const char upperrv[5] =
+	{ 'A', 'G', 'T', 'C', 'N' };
+	const char lowerfw[5] =
+	{ 't', 'c', 'a', 'g', 'n' };
+	const char lowerrv[5] =
+	{ 'a', 'g', 't', 'c', 'n' };
 
 	// clean start and end (that is: start < end <= dnasize)
 	uint32_t startNuc = std::min(dnaSize_ - 1, start);
 	uint32_t endNuc = std::max(startNuc + 1, std::min(dnaSize_, end)); // < dnaSize, > startNuc.
-	
+
 	// calculate byte positions in file.
 	uint32_t startByte = packedpos_ + (startNuc / 4);
 	uint32_t endByte = packedpos_ + (endNuc / 4) + (endNuc % 4 > 0);
@@ -125,7 +132,7 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 	// update start and end nucleotide to the ones we're actually reading (based on byte positions)
 	startNuc = (startByte - packedpos_) * 4;
 	endNuc = (endByte - packedpos_) * 4;
-	
+
 	// nuke buffer and resize
 	buffer.clear();
 	buffer.resize(endNuc - startNuc);
@@ -143,7 +150,8 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 	uint32_t nregionsize = nRegions.size();
 
 	file_.seekg(filePos);
-	while (filePos < endByte) {
+	while (filePos < endByte)
+	{
 
 		file_.read(buffer_, std::min(endByte - filePos, BUFFER_SIZE));
 		filePos += BUFFER_SIZE;
@@ -169,39 +177,57 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 				if (m == 0 && n == 0)
 				{
 					// no mask, no N
-					if (revcomp) {
-						buffer[endNuc - seqPos - 1] = upperrv[(buffer_[i] >> (6 - j)) & 0x03];
-					} else {
-						buffer[seqPos - startNuc] = upperfw[(buffer_[i] >> (6 - j)) & 0x03];
+					if (revcomp)
+					{
+						buffer[endNuc - seqPos - 1] = upperrv[(buffer_[i]
+								>> (6 - j)) & 0x03];
+					}
+					else
+					{
+						buffer[seqPos - startNuc] = upperfw[(buffer_[i]
+								>> (6 - j)) & 0x03];
 					}
 				}
 				else if (m == 0 && n > 0)
 				{
 					// no mask, but N
-					if (revcomp) {
+					if (revcomp)
+					{
 						buffer[endNuc - seqPos - 1] = upperrv[4];
-					} else {
+					}
+					else
+					{
 						buffer[seqPos - startNuc] = upperfw[4];
 					}
 				}
 				else if (m > 0 && n == 0)
 				{
 					// mask, no N
-					if (revcomp) {
-						buffer[endNuc - seqPos - 1] = lowerrv[(buffer_[i] >> (6 - j)) & 0x03];
-					} else {
-						buffer[seqPos - startNuc] = lowerfw[(buffer_[i] >> (6 - j)) & 0x03];
+					if (revcomp)
+					{
+						buffer[endNuc - seqPos - 1] = lowerrv[(buffer_[i]
+								>> (6 - j)) & 0x03];
+					}
+					else
+					{
+						buffer[seqPos - startNuc] = lowerfw[(buffer_[i]
+								>> (6 - j)) & 0x03];
 					}
 				}
 				else if (m > 0 && n > 0)
 				{
 					// masked N (should not happen I guess)
-					if (revcomp) {
+					if (revcomp)
+					{
 						buffer[endNuc - seqPos - 1] = lowerrv[4];
-					} else {
+					}
+					else
+					{
 						buffer[seqPos - startNuc] = lowerfw[4];
 					}
-				} else {
+				}
+				else
+				{
 					// negative values for m or n means something's not quite right.
 					throw Exception("Error parsing regions.");
 				}

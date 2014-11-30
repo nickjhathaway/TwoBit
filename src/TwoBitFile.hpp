@@ -26,7 +26,7 @@
 namespace TwoBit
 {
 
-class TwoBitSequence;
+class TwoBitSequenceMeta;
 
 class TwoBitFile
 {
@@ -44,7 +44,7 @@ private:
 	uint32_t reserved_;
 	const std::string filename_;
 	std::ifstream file_;
-	std::unordered_map<std::string, std::shared_ptr<TwoBitSequence>> sequences_;
+	std::unordered_map<std::string, std::shared_ptr<TwoBitSequenceMeta>> sequences_;
 
 	// read 16 header bytes from file.
 	void readHeader();
@@ -52,7 +52,7 @@ private:
 	// create sequences from file
 	void createSequences();
 
-	friend class TwoBitSequence;
+	friend class TwoBitSequenceMeta;
 
 public:
 	TwoBitFile(const std::string& filename);

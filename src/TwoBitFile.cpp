@@ -15,7 +15,7 @@
  */
 
 #include "TwoBitFile.hpp"
-#include "TwoBitSequence.hpp"
+#include "TwoBitSequenceMeta.hpp"
 #include "TwoBitUtil.hpp"
 
 #include "Exception.hpp"
@@ -77,10 +77,25 @@ void TwoBitFile::createSequences()
 		file_.read(seqName, seqNameLen); // sequence name
 		offset = nextInt(file_, swapped_); // offset
 		sequences_.emplace(std::string(seqName, seqNameLen),
-				std::make_shared<TwoBitSequence>(
+				std::make_shared<TwoBitSequenceMeta>(
 						std::string(seqName, seqNameLen), offset, *this));
 	}
 }
+
+//void TwoBitFile::createSequences()
+//{
+//	uint32_t seqNameLen, offset;
+//	char seqName[256]; // length field is one byte.
+//	for (uint32_t i = 0; i < sequenceCount_; ++i)
+//	{
+//		seqNameLen = nextChar(file_); // length
+//		file_.read(seqName, seqNameLen); // sequence name
+//		offset = nextInt(file_, swapped_); // offset
+//		sequences_.emplace(std::string(seqName, seqNameLen),
+//				std::make_shared<TwoBitSequence>(
+//						std::string(seqName, seqNameLen), offset, *this));
+//	}
+//}
 
 void TwoBitFile::init()
 {
