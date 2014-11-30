@@ -16,9 +16,9 @@
 
 #include "TwoBitFile.hpp"
 #include "TwoBitUtil.hpp"
+#include "TwoBitSequence.hpp"
 
 #include "Exception.hpp"
-#include <iostream>
 #include <algorithm>
 
 namespace TwoBit
@@ -28,6 +28,21 @@ TwoBitFile::TwoBitFile(const std::string& filename) :
 		swapped_(false), magic_(0), version_(0), sequenceCount_(0), reserved_(
 				0), filename_(filename)
 {
+	file_.open(filename_, std::ios::in | std::ios::binary);
+	try
+	{
+		readTwoBitHeader();
+		createSequenceMeta();
+		for (auto& meta : sequences_)
+		{
+			populateSequenceMeta(meta.second);
+		}
+	} catch (Exception& e)
+	{
+		file_.close();
+		throw(e);
+	}
+	file_.close();
 }
 
 void TwoBitFile::readTwoBitHeader()
@@ -148,23 +163,17 @@ void TwoBitFile::readRegions(std::vector<SequenceMeta::Region>& out)
 			});
 }
 
-void TwoBitFile::init()
+TwoBitSequence TwoBitFile::operator[](const std::string& s) const
 {
-	file_.open(filename_, std::ios::in | std::ios::binary);
-	try
+	auto iter = sequences_.find(s);
+	if (iter != sequences_.end())
 	{
-		readTwoBitHeader();
-		createSequenceMeta();
-		for (auto& meta : sequences_)
-		{
-			populateSequenceMeta(meta.second);
-		}
-	} catch (Exception& e)
-	{
-		file_.close();
-		throw(e);
+		return (TwoBitSequence(iter->second));
 	}
-	file_.close();
+	else
+	{
+		throw Exception("Unknown sequence '" + s + "'.");
+	}
 }
 
 } // namespace TwoBit

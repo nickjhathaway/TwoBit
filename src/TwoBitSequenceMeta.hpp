@@ -19,11 +19,11 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <ostream>
 
-namespace TwoBit {
-	class SequenceMeta;
-	class TwoBitFile;
+namespace TwoBit
+{
+class SequenceMeta;
+class TwoBitFile;
 }
 
 std::ostream& operator<<(std::ostream& s, const TwoBit::SequenceMeta& x);
@@ -80,7 +80,8 @@ public:
 		dnaBytes_ = 0;
 		packedPos_ = 0;
 	}
-	SequenceMeta() {
+	SequenceMeta()
+	{
 		name_ = "";
 		offset_ = 0;
 		filename_ = "";

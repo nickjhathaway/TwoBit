@@ -17,17 +17,17 @@
 // see http://genome.ucsc.edu/FAQ/FAQformat#format7
 #pragma once
 
+#include "TwoBitSequenceMeta.hpp"
+
 #include <string>
 #include <fstream>
 #include <unordered_map>
-#include <memory>
-
-#include "TwoBitSequenceMeta.hpp"
 
 namespace TwoBit
 {
 
 class TwoBitSequenceMeta;
+class TwoBitSequence;
 
 class TwoBitFile
 {
@@ -56,18 +56,15 @@ private:
 	void populateSequenceMeta(SequenceMeta& meta);
 	void readRegions(std::vector<SequenceMeta::Region>& out);
 
-	friend class TwoBitSequenceMeta;
-
 public:
-	TwoBitFile(const std::string& filename);
-
 	// no-copy
 	TwoBitFile(const TwoBitFile& other) = delete;
 	TwoBitFile() = delete;
 	TwoBitFile& operator=(const TwoBitFile& other) = delete;
 
-	void init();
-	void test();
+	TwoBitFile(const std::string& filename);
+	TwoBitSequence operator[](const std::string& s) const;
+
 };
 
 } // namespace TwoBit
