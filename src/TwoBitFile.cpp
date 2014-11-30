@@ -64,7 +64,7 @@ void TwoBitFile::readTwoBitHeader()
 	}
 	else
 	{
-		throw Exception("Error reading from file.");
+		throw Exception("Error reading file.");
 	}
 
 	version_ = nextInt();		// always zero
