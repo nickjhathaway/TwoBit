@@ -22,7 +22,7 @@
 #include <unordered_map>
 #include <memory>
 
-#include "TBMeta.hpp"
+#include "TwoBitSequenceMeta.hpp"
 
 namespace TwoBit
 {
@@ -55,7 +55,6 @@ private:
 	void createSequenceMeta();
 	void populateSequenceMeta(SequenceMeta& meta);
 	void readRegions(std::vector<SequenceMeta::Region>& out);
-
 
 	friend class TwoBitSequenceMeta;
 

@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#include "TBMeta.hpp"
+#include "TwoBitSequenceMeta.hpp"
 
 std::ostream& operator<<(std::ostream& s, const TwoBit::SequenceMeta& x)
 {
