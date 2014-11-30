@@ -77,7 +77,7 @@ private:
 		}
 		else
 		{
-			throw Exception("Error reading from file.");
+			throw Exception("Error reading file.");
 		}
 	}
 
@@ -91,7 +91,7 @@ private:
 		}
 		else
 		{
-			throw Exception("Error reading from file.");
+			throw Exception("Error reading file.");
 		}
 	}
 
