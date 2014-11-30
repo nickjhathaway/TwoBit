@@ -15,13 +15,14 @@
  */
 
 // see http://genome.ucsc.edu/FAQ/FAQformat#format7
-
 #pragma once
 
 #include <string>
 #include <fstream>
 #include <unordered_map>
 #include <memory>
+
+#include "TBMeta.hpp"
 
 namespace TwoBit
 {
@@ -36,27 +37,32 @@ private:
 	static const uint32_t REVERSE_MAGIC_NUMBER = 0x4327411A;
 	static const uint32_t VERSION = 0;
 	static const uint32_t RESERVED = 0;
+	static const uint32_t SEQNAME_MAX_LEN = 256; // represented by one byte so, ...
 
 	bool swapped_;
 	uint32_t magic_;
 	uint32_t version_;
 	uint32_t sequenceCount_;
 	uint32_t reserved_;
-	const std::string filename_;
+	std::string filename_;
 	std::ifstream file_;
-	std::unordered_map<std::string, std::shared_ptr<TwoBitSequenceMeta>> sequences_;
+	std::unordered_map<std::string, SequenceMeta> sequences_;
 
 	// read 16 header bytes from file.
-	void readHeader();
+	void readTwoBitHeader();
 
 	// create sequences from file
-	void createSequences();
+	void createSequenceMeta();
+	void populateSequenceMeta(SequenceMeta& meta);
+	void readRegions(std::vector<SequenceMeta::Region>& out);
+
 
 	friend class TwoBitSequenceMeta;
 
 public:
 	TwoBitFile(const std::string& filename);
 
+	// no-copy
 	TwoBitFile(const TwoBitFile& other) = delete;
 	TwoBitFile() = delete;
 	TwoBitFile& operator=(const TwoBitFile& other) = delete;

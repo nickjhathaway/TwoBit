@@ -15,7 +15,7 @@
  */
 
 #include "TwoBitFile.hpp"
-#include "TwoBitSequenceMeta.hpp"
+//#include "TwoBitSequenceMeta.hpp"
 #include "TwoBitUtil.hpp"
 
 #include "Exception.hpp"
@@ -31,8 +31,10 @@ TwoBitFile::TwoBitFile(const std::string& filename) :
 {
 }
 
-void TwoBitFile::readHeader()
+void TwoBitFile::readTwoBitHeader()
 {
+	// Read first 16 bytes of 2-bit file to get things going
+
 	if (file_.read(reinterpret_cast<char*>(&magic_), 4))
 	{
 		if (magic_ == MAGIC_NUMBER)
@@ -52,9 +54,10 @@ void TwoBitFile::readHeader()
 	{
 		throw Exception("Error reading from file.");
 	}
-	version_ = nextInt(file_, swapped_);
-	sequenceCount_ = nextInt(file_, swapped_);
-	reserved_ = nextInt(file_, swapped_);
+
+	version_ = nextInt(file_, swapped_);		// always zero
+	sequenceCount_ = nextInt(file_, swapped_);	// number of sequences
+	reserved_ = nextInt(file_, swapped_);		// always zero
 
 	// integrity check
 	if (VERSION != version_)
@@ -67,83 +70,134 @@ void TwoBitFile::readHeader()
 	}
 }
 
-void TwoBitFile::createSequences()
+void TwoBitFile::createSequenceMeta()
 {
+	// create SequenceMeta objects from name and offset
+
 	uint32_t seqNameLen, offset;
-	char seqName[256]; // length field is one byte.
+	char seqName[SEQNAME_MAX_LEN];
+	std::string seqNameStr; // name as std::string
+
 	for (uint32_t i = 0; i < sequenceCount_; ++i)
 	{
 		seqNameLen = nextChar(file_); // length
 		file_.read(seqName, seqNameLen); // sequence name
+		seqNameStr = std::string(seqName, seqNameLen);
 		offset = nextInt(file_, swapped_); // offset
-		sequences_.emplace(std::string(seqName, seqNameLen),
-				std::make_shared<TwoBitSequenceMeta>(
-						std::string(seqName, seqNameLen), offset, *this));
+
+		// add meta data.
+		sequences_.emplace(seqNameStr,
+				SequenceMeta(seqNameStr, offset, filename_, swapped_));
 	}
 }
 
-//void TwoBitFile::createSequences()
-//{
-//	uint32_t seqNameLen, offset;
-//	char seqName[256]; // length field is one byte.
-//	for (uint32_t i = 0; i < sequenceCount_; ++i)
-//	{
-//		seqNameLen = nextChar(file_); // length
-//		file_.read(seqName, seqNameLen); // sequence name
-//		offset = nextInt(file_, swapped_); // offset
-//		sequences_.emplace(std::string(seqName, seqNameLen),
-//				std::make_shared<TwoBitSequence>(
-//						std::string(seqName, seqNameLen), offset, *this));
-//	}
-//}
+void TwoBitFile::populateSequenceMeta(SequenceMeta& meta)
+{
+	// seek to offset and read actual sequence meta data.
+
+	file_.seekg(meta.offset_);
+	meta.dnaSize_ = nextInt(file_, swapped_); // length of sequence
+	meta.dnaBytes_ = meta.dnaSize_ / 4 + (meta.dnaSize_ % 4 > 0);
+
+	// read nRegions.
+	readRegions(meta.nRegions); // N-regions
+	readRegions(meta.mRegions); // mask regions
+
+	// check. this number should be zero as per the spec.
+	if (0 != nextInt(file_, swapped_))
+	{
+		throw Exception("Unexpected data. Bad 2-bit file.");
+	}
+
+	// store start of packed data
+	meta.packedPos_ = file_.tellg();
+
+}
+
+void TwoBitFile::readRegions(std::vector<SequenceMeta::Region>& out)
+{
+	uint32_t count;
+	std::vector<uint32_t> starts;
+	std::vector<uint32_t> lengths;
+
+	count = nextInt(file_, swapped_);
+	for (uint32_t i = 0; i < count; ++i)
+	{
+		// read starts of regions
+		starts.emplace_back(nextInt(file_, swapped_));
+	}
+	for (uint32_t i = 0; i < count; ++i)
+	{
+		// read lengths of regions
+		lengths.emplace_back(nextInt(file_, swapped_));
+	}
+
+	// transform into a usable structure.
+	// {(0, 0), (start, 1), (end, -1), (start, 1), (end, -1), ...}
+	out.clear();
+	out.reserve(count * 2);
+	out.emplace_back(0, 0); // filler, makes logic a little easier
+	for (uint32_t i = 0; i < count; ++i)
+	{
+		out.emplace_back(starts[i], 1);
+		out.emplace_back(starts[i] + lengths[i], -1);
+	}
+	std::sort(out.begin() + 1, out.end(),
+			[](const SequenceMeta::Region& a, const SequenceMeta::Region& b)
+			{
+				return a.pos_ < b.pos_;
+			});
+}
 
 void TwoBitFile::init()
 {
 	file_.open(filename_, std::ios::in | std::ios::binary);
 	try
 	{
-		readHeader();
+		readTwoBitHeader();
+		createSequenceMeta();
+		for (auto& meta : sequences_)
+		{
+			populateSequenceMeta(meta.second);
+		}
 	} catch (Exception& e)
 	{
 		file_.close();
 		throw(e);
 	}
-	createSequences();
 	file_.close();
 }
 
-void TwoBitFile::test()
-{
-	for (auto& i : sequences_)
-	{
-		i.second->test();
-	}
-	printf("magic: 0x%X\n", magic_);
-	std::cout << "version_: " << version_ << std::endl;
-	printf("sequenceCount: 0x%X\n", sequenceCount_);
-	std::cout << "reserved: " << reserved_ << std::endl;
+//void TwoBitFile::test()
+//{
+//	for (auto& i : sequences_)
+//	{
+//		i.second->test();
+//	}
+//	printf("magic: 0x%X\n", magic_);
+//	std::cout << "version_: " << version_ << std::endl;
+//	printf("sequenceCount: 0x%X\n", sequenceCount_);
+//	std::cout << "reserved: " << reserved_ << std::endl;
+//
+////	std::vector<char> myseq;
+//////	sequences_["chrUn_gl000215"]->getSequence(myseq, 0, 20000);
+////	sequences_["chr1"]->getSequence(myseq, 20000, 20100, false);
+//////	sequences_["chrXIII"]->getSequence(myseq, 0, 2000000000);
+////	//std::cout << std::string(myseq.begin(), myseq.end()) << std::endl;
+////
+////	std::cout << "myseq.size(): " << myseq.size() << std::endl;
+////	std::cout << "myseq.capacity(): " << myseq.capacity() << std::endl;
+////
+////	//std::reverse(myseq.begin(), myseq.end());
+////
+////	sequences_["chr1"]->getSequence(myseq, 15000, 15020, false);
+////	std::cout << std::string(myseq.begin(), myseq.end()) << std::endl;
+////	sequences_["chr1"]->getSequence(myseq, 15000, 15020, true);
+////	std::cout << std::string(myseq.begin(), myseq.end()) << std::endl;
+////
+////	unsigned char x = 6;
+////	std::cout << (x << 2) << std::endl;
+//}
 
-	std::vector<char> myseq;
-//	sequences_["chrUn_gl000215"]->getSequence(myseq, 0, 20000);
-	sequences_["chr1"]->getSequence(myseq, 20000, 20100, false);
-//	sequences_["chrXIII"]->getSequence(myseq, 0, 2000000000);
-	//std::cout << std::string(myseq.begin(), myseq.end()) << std::endl;
-
-	std::cout << "myseq.size(): " << myseq.size() << std::endl;
-	std::cout << "myseq.capacity(): " << myseq.capacity() << std::endl;
-
-	//std::reverse(myseq.begin(), myseq.end());
-
-
-	sequences_["chr1"]->getSequence(myseq, 15000, 15020, false);
-	std::cout << std::string(myseq.begin(), myseq.end()) << std::endl;
-	sequences_["chr1"]->getSequence(myseq, 15000, 15020, true);
-	std::cout << std::string(myseq.begin(), myseq.end()) << std::endl;
-
-
-	unsigned char x = 6;
-	std::cout << (x << 2) << std::endl;
-}
-
-} // namespace TwoBit
+}// namespace TwoBit
 
