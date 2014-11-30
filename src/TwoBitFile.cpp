@@ -15,10 +15,8 @@
  */
 
 #include "TwoBitFile.hpp"
-#include "TwoBitUtil.hpp"
 #include "TwoBitSequence.hpp"
 
-#include "Exception.hpp"
 #include <algorithm>
 
 namespace TwoBit
@@ -69,9 +67,9 @@ void TwoBitFile::readTwoBitHeader()
 		throw Exception("Error reading from file.");
 	}
 
-	version_ = nextInt(file_, swapped_);		// always zero
-	sequenceCount_ = nextInt(file_, swapped_);	// number of sequences
-	reserved_ = nextInt(file_, swapped_);		// always zero
+	version_ = nextInt();		// always zero
+	sequenceCount_ = nextInt();	// number of sequences
+	reserved_ = nextInt();		// always zero
 
 	// integrity check
 	if (VERSION != version_)
@@ -94,10 +92,10 @@ void TwoBitFile::createSequenceMeta()
 
 	for (uint32_t i = 0; i < sequenceCount_; ++i)
 	{
-		seqNameLen = nextChar(file_); // length
+		seqNameLen = nextChar(); // length
 		file_.read(seqName, seqNameLen); // sequence name
 		seqNameStr = std::string(seqName, seqNameLen);
-		offset = nextInt(file_, swapped_); // offset
+		offset = nextInt(); // offset
 
 		// add meta data.
 		sequences_.emplace(seqNameStr,
@@ -110,7 +108,7 @@ void TwoBitFile::populateSequenceMeta(SequenceMeta& meta)
 	// seek to offset and read actual sequence meta data.
 
 	file_.seekg(meta.offset_);
-	meta.dnaSize_ = nextInt(file_, swapped_); // length of sequence
+	meta.dnaSize_ = nextInt(); // length of sequence
 	meta.dnaBytes_ = meta.dnaSize_ / 4 + (meta.dnaSize_ % 4 > 0);
 
 	// read nRegions.
@@ -118,7 +116,7 @@ void TwoBitFile::populateSequenceMeta(SequenceMeta& meta)
 	readRegions(meta.mRegions); // mask regions
 
 	// check. this number should be zero as per the spec.
-	if (0 != nextInt(file_, swapped_))
+	if (0 != nextInt())
 	{
 		throw Exception("Unexpected data. Bad 2-bit file.");
 	}
@@ -134,16 +132,16 @@ void TwoBitFile::readRegions(std::vector<SequenceMeta::Region>& out)
 	std::vector<uint32_t> starts;
 	std::vector<uint32_t> lengths;
 
-	count = nextInt(file_, swapped_);
+	count = nextInt();
 	for (uint32_t i = 0; i < count; ++i)
 	{
 		// read starts of regions
-		starts.emplace_back(nextInt(file_, swapped_));
+		starts.emplace_back(nextInt());
 	}
 	for (uint32_t i = 0; i < count; ++i)
 	{
 		// read lengths of regions
-		lengths.emplace_back(nextInt(file_, swapped_));
+		lengths.emplace_back(nextInt());
 	}
 
 	// transform into a usable structure.

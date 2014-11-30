@@ -18,6 +18,7 @@
 #pragma once
 
 #include "TwoBitSequenceMeta.hpp"
+#include "Exception.hpp"
 
 #include <string>
 #include <fstream>
@@ -47,6 +48,52 @@ private:
 	std::string filename_;
 	std::ifstream file_;
 	std::unordered_map<std::string, SequenceMeta> sequences_;
+
+	// util
+
+	// read a uint32_t from file handle and swap bytes if required.
+	inline const uint32_t nextInt()
+	{
+		union aligned
+		{
+			uint32_t uint;
+			char bytes[4];
+		} in, out;
+
+		if (file_.read(reinterpret_cast<char*>(&in), 4))
+		{
+			if (swapped_)
+			{
+				for (uint32_t i = 0; i < 4; ++i)
+				{
+					out.bytes[3 - i] = in.bytes[i];
+				}
+				return out.uint;
+			}
+			else
+			{
+				return in.uint;
+			}
+		}
+		else
+		{
+			throw Exception("Error reading from file.");
+		}
+	}
+
+	// read one char from file handle
+	inline const unsigned char nextChar()
+	{
+		char out;
+		if (file_.read(reinterpret_cast<char*>(&out), 1))
+		{
+			return out;
+		}
+		else
+		{
+			throw Exception("Error reading from file.");
+		}
+	}
 
 	// read 16 header bytes from file.
 	void readTwoBitHeader();
