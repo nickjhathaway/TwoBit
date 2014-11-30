@@ -85,7 +85,7 @@ private:
 	inline const unsigned char nextChar()
 	{
 		char out;
-		if (file_.read(reinterpret_cast<char*>(&out), 1))
+		if (file_.read(&out, 1))
 		{
 			return out;
 		}
