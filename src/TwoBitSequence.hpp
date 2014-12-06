@@ -35,7 +35,7 @@ class TwoBitSequence
 {
 private:
 
-	static const uint32_t BUFFER_SIZE = 0x1000; //4k
+	static const uint32_t BUFFER_SIZE = 0x80000; //512k
 
 	std::ifstream file_;
 	const SequenceMeta& meta_;
