@@ -90,16 +90,6 @@ public:
 		dnaBytes_ = 0;
 		packedPos_ = 0;
 	}
-//	SequenceMeta(const SequenceMeta& other) {
-//		name_ = other.name_;
-//		offset_ = other.offset_;
-//		filename_ = other.filename_;
-//		swapped_ = other.swapped_;
-//		dnaSize_ = other.dnaSize_;
-//		dnaBytes_ = other.dnaBytes_;
-//		packedPos_ = other.packedPos_;
-//	}
-
 };
 
 } // namespace TwoBit
