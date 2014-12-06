@@ -1,17 +1,15 @@
-NO_R="true"
 include makefile-common.mk
-CPP = g++-mp-4.8
-#CPP = clang++-mp-3.3
-AR = ar
+CPP = clang++
+#CPP = g++-4.8
 STRIP = strip
+AR = ar
 
 # main paths
 EXT_PATH=$(realpath external)
-COMMON_PATH=$(realpath ../../common)
 SCRIPTS_PATH=$(realpath ./scripts)
-VELDE_PATH=$(realpath ../../vandervelde)
 
 LIB_EXCLUDE := src/main.cpp
+
 
 HEADERS = $(call rwildcard, src/, *.h) \
 	$(call rwildcard, src/, *.hpp)
@@ -21,9 +19,10 @@ OBJ := $(addprefix $(OBJ_DIR)/, $(patsubst %.cpp, %.o, $(call rwildcard, src/, *
 LIBOBJ := $(filter-out $(addprefix $(OBJ_DIR)/, $(patsubst %.cpp, %.o, $(LIB_EXCLUDE))), $(OBJ))
 
 BIN := bin/twobit
+STATIC := bin/twobit.a
 
 .PHONY: all
-all: $(OBJ_DIR) $(BIN)
+all: $(OBJ_DIR) $(BIN) $(STATIC)
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
@@ -38,22 +37,15 @@ $(BIN): $(OBJ)
 	$(SCRIPTS_PATH)/fixDyLinking_mac.sh $@
 	$(STRIP) $@
 
-.PHONY : run
-run:
-	@echo "******************** running ********************"
-	./a.out
-	@echo "******************** done    ********************"
+$(STATIC): $(LIBOBJ)
+	$(AR) rcs $@ $^
 
 .PHONY: clean
 clean:
 	@rm -f $(BIN)
+	@rm -f $(STATIC)
 	@rm -rf $(OBJ_DIR)
 
 .PHONY: redo
 redo: clean all
-
-.PHONY: test
-test : all
-	$(SCRIPTS_PATH)/test.sh
-
 
