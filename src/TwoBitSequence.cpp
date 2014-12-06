@@ -24,7 +24,7 @@ namespace TwoBit
 
 const uint32_t TwoBitSequence::BUFFER_SIZE;
 
-void TwoBitSequence::getSequence(std::vector<char>& buffer,
+std::string& TwoBitSequence::getSequence(std::string& buffer,
 		const uint32_t& start, const uint32_t& end,
 		const bool reverseComplement, const bool doMask)
 {
@@ -168,6 +168,7 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 			}
 		}
 	}
+	return buffer;
 }
 
 const SequenceMeta& TwoBitSequence::getMetadata() const

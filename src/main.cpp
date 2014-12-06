@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 
 		std::cout << tbs << std::endl;
 
-		std::vector<char> bla;
+		std::string bla;
 
 		tbs.getSequence(bla, 9990, 21000, false, false);
 		std::cout << "bla.size(): " << bla.size() << std::endl;
@@ -36,6 +36,11 @@ int main(int argc, char** argv)
 		std::cout << std::string(bla.begin(), bla.end()) << std::endl;
 
 		tbs.getSequence(bla, 9990, 10005, false, false);
+		std::cout << "bla.size(): " << bla.size() << std::endl;
+		std::cout << "bla.capacity(): " << bla.capacity() << std::endl;
+		std::cout << std::string(bla.begin(), bla.end()) << std::endl;
+
+		tbs.getSequence(bla, 9990, 10005, true, false);
 		std::cout << "bla.size(): " << bla.size() << std::endl;
 		std::cout << "bla.capacity(): " << bla.capacity() << std::endl;
 		std::cout << std::string(bla.begin(), bla.end()) << std::endl;

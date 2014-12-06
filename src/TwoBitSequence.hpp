@@ -69,7 +69,7 @@ public:
 	TwoBitSequence& operator=(const TwoBitSequence& other) = delete;
 
 	// get sequence, from start to end, optionally in reverse-complement
-	void getSequence(std::vector<char>& buffer, const uint32_t& start = 0,
+	std::string& getSequence(std::string& buffer, const uint32_t& start = 0,
 			const uint32_t& end = 0, const bool reverseComplement = false,
 			const bool doMask = true);
 
