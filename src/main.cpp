@@ -45,6 +45,14 @@ int main(int argc, char** argv)
 		std::cout << "bla.capacity(): " << bla.capacity() << std::endl;
 		std::cout << std::string(bla.begin(), bla.end()) << std::endl;
 
+		for (const std::string& s : tbf.sequenceNames())
+		{
+			std::cout << s << " ";
+		}
+		std::cout << std::endl;
+
+		std::cout << tbf.size() << std::endl;
+
 	} catch (std::exception& e)
 	{
 		std::cout << "Error: " << e.what() << std::endl;

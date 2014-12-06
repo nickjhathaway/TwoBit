@@ -100,6 +100,7 @@ void TwoBitFile::createSequenceMeta()
 		// add meta data.
 		sequences_.emplace(seqNameStr,
 				SequenceMeta(seqNameStr, offset, filename_, swapped_));
+		sequenceNames_.push_back(seqNameStr);
 	}
 }
 
@@ -172,6 +173,16 @@ TwoBitSequence TwoBitFile::operator[](const std::string& s) const
 	{
 		throw Exception("Unknown sequence '" + s + "'.");
 	}
+}
+
+const std::vector<std::string>& TwoBitFile::sequenceNames() const
+{
+	return sequenceNames_;
+}
+
+const uint32_t TwoBitFile::size() const
+{
+	return sequences_.size();
 }
 
 } // namespace TwoBit

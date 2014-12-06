@@ -48,6 +48,7 @@ private:
 	std::string filename_;
 	std::ifstream file_;
 	std::unordered_map<std::string, SequenceMeta> sequences_;
+	std::vector<std::string> sequenceNames_;
 
 	// util
 
@@ -111,6 +112,8 @@ public:
 
 	TwoBitFile(const std::string& filename);
 	TwoBitSequence operator[](const std::string& s) const;
+	const std::vector<std::string>& sequenceNames() const;
+	const uint32_t size() const;
 
 };
 
