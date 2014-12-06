@@ -30,6 +30,16 @@ int main(int argc, char** argv)
 		std::cout << "bla.size(): " << bla.size() << std::endl;
 		std::cout << "bla.capacity(): " << bla.capacity() << std::endl;
 
+		tbs.getSequence(bla, 9991, 21017, true, false);
+		std::cout << "bla.size(): " << bla.size() << std::endl;
+		std::cout << "bla.capacity(): " << bla.capacity() << std::endl;
+		std::cout << std::string(bla.begin(), bla.end()) << std::endl;
+
+		tbs.getSequence(bla, 9990, 10005, false, false);
+		std::cout << "bla.size(): " << bla.size() << std::endl;
+		std::cout << "bla.capacity(): " << bla.capacity() << std::endl;
+		std::cout << std::string(bla.begin(), bla.end()) << std::endl;
+
 	} catch (std::exception& e)
 	{
 		std::cout << "Error: " << e.what() << std::endl;

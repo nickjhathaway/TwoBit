@@ -58,16 +58,11 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 	uint32_t startByte = meta_.packedPos_ + (startNuc / 4);
 	uint32_t endByte = meta_.packedPos_ + (endNuc / 4) + (endNuc % 4 > 0);
 
-	// update start and end nucleotide to the ones we're actually reading (based on byte positions)
-	startNuc = (startByte - meta_.packedPos_) * 4;
-	endNuc = (endByte - meta_.packedPos_) * 4;
-
-	// nuke buffer and resize
-	buffer.clear();
+	// resize buffer
 	buffer.resize(endNuc - startNuc);
 
 	// reading starts here.
-	uint32_t seqPos = startNuc;
+	uint32_t seqPos = (startByte - meta_.packedPos_) * 4; // we start at a byte position
 	uint32_t filePos = startByte;
 
 	// counters for N and mask regions
@@ -106,63 +101,68 @@ void TwoBitSequence::getSequence(std::vector<char>& buffer,
 				{
 					m += meta_.mRegions[prevm++].action_;
 				}
-				// translate 2-bit to sequence.
-				if (m == 0 && doMask && n == 0)
+
+				// if we are within the requested range, insert sequence into output vector
+				if (seqPos >= startNuc && seqPos < endNuc)
 				{
-					// no mask, no N
-					if (reverseComplement)
+					// translate 2-bit to sequence.
+					if (m == 0 && doMask && n == 0)
 					{
-						buffer[endNuc - seqPos - 1] = upperrv[(buffer_[i]
-								>> (6 - j)) & 0x03];
+						// no mask, no N
+						if (reverseComplement)
+						{
+							buffer[endNuc - seqPos - 1] = upperrv[(buffer_[i]
+									>> (6 - j)) & 0x03];
+						}
+						else
+						{
+							buffer[seqPos - startNuc] = upperfw[(buffer_[i]
+									>> (6 - j)) & 0x03];
+						}
+					}
+					else if (m == 0 && doMask && n > 0)
+					{
+						// no mask, but N
+						if (reverseComplement)
+						{
+							buffer[endNuc - seqPos - 1] = upperrv[4];
+						}
+						else
+						{
+							buffer[seqPos - startNuc] = upperfw[4];
+						}
+					}
+					else if ((m > 0 || !doMask) && n == 0)
+					{
+						// mask, no N
+						if (reverseComplement)
+						{
+							buffer[endNuc - seqPos - 1] = lowerrv[(buffer_[i]
+									>> (6 - j)) & 0x03];
+						}
+						else
+						{
+							buffer[seqPos - startNuc] = lowerfw[(buffer_[i]
+									>> (6 - j)) & 0x03];
+						}
+					}
+					else if ((m > 0 || !doMask) && n > 0)
+					{
+						// masked N (should not happen I guess)
+						if (reverseComplement)
+						{
+							buffer[endNuc - seqPos - 1] = lowerrv[4];
+						}
+						else
+						{
+							buffer[seqPos - startNuc] = lowerfw[4];
+						}
 					}
 					else
 					{
-						buffer[seqPos - startNuc] = upperfw[(buffer_[i]
-								>> (6 - j)) & 0x03];
+						// negative values for m or n means something's not quite right.
+						throw Exception("Error parsing regions.");
 					}
-				}
-				else if (m == 0 && doMask && n > 0)
-				{
-					// no mask, but N
-					if (reverseComplement)
-					{
-						buffer[endNuc - seqPos - 1] = upperrv[4];
-					}
-					else
-					{
-						buffer[seqPos - startNuc] = upperfw[4];
-					}
-				}
-				else if ((m > 0 || !doMask) && n == 0)
-				{
-					// mask, no N
-					if (reverseComplement)
-					{
-						buffer[endNuc - seqPos - 1] = lowerrv[(buffer_[i]
-								>> (6 - j)) & 0x03];
-					}
-					else
-					{
-						buffer[seqPos - startNuc] = lowerfw[(buffer_[i]
-								>> (6 - j)) & 0x03];
-					}
-				}
-				else if ((m > 0 || !doMask) && n > 0)
-				{
-					// masked N (should not happen I guess)
-					if (reverseComplement)
-					{
-						buffer[endNuc - seqPos - 1] = lowerrv[4];
-					}
-					else
-					{
-						buffer[seqPos - startNuc] = lowerfw[4];
-					}
-				}
-				else
-				{
-					// negative values for m or n means something's not quite right.
-					throw Exception("Error parsing regions.");
 				}
 				++seqPos;
 			}
