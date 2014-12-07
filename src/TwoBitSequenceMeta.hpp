@@ -22,22 +22,23 @@
 
 namespace TwoBit
 {
-class SequenceMeta;
+class TwoBitSequenceMeta;
 class TwoBitFile;
 }
 
-std::ostream& operator<<(std::ostream& s, const TwoBit::SequenceMeta& x);
+std::ostream& operator<<(std::ostream& s, const TwoBit::TwoBitSequenceMeta& x);
 
 namespace TwoBit
 {
 
-class SequenceMeta
+class TwoBitSequenceMeta
 {
 
 	// Contains enough information to open a two-bit file and read a specific
 	// sequence, without having to read in any meta data.
 
 private:
+
 	class Region
 	{
 	public:
@@ -51,19 +52,40 @@ private:
 				pos_(pos), action_(action)
 		{
 		}
+		uint32_t getPosition() const
+		{
+			return pos_;
+		}
+		int getAction() const
+		{
+			return action_;
+		}
 	};
 
 	friend class TwoBitFile;
 
 	// make it "printable"
-	friend std::ostream& ::operator<<(std::ostream& s, const SequenceMeta& x);
+	friend std::ostream& ::operator<<(std::ostream& s,
+			const TwoBitSequenceMeta& x);
 
-	SequenceMeta()
+	TwoBitSequenceMeta()
 	{
 		name_ = "";
 		offset_ = 0;
 		filename_ = "";
 		swapped_ = false;
+		dnaSize_ = 0;
+		dnaBytes_ = 0;
+		packedPos_ = 0;
+	}
+
+	TwoBitSequenceMeta(const std::string& name, const uint32_t offset,
+			const std::string& filename, const bool swapped)
+	{
+		name_ = name;
+		offset_ = offset;
+		filename_ = filename;
+		swapped_ = swapped;
 		dnaSize_ = 0;
 		dnaBytes_ = 0;
 		packedPos_ = 0;
@@ -81,16 +103,50 @@ protected:
 	std::vector<Region> mRegions; // Masked
 
 public:
-	SequenceMeta(const std::string& name, const uint32_t offset,
-			const std::string& filename, const bool swapped)
+
+	uint32_t getDnaBytes() const
 	{
-		name_ = name;
-		offset_ = offset;
-		filename_ = filename;
-		swapped_ = swapped;
-		dnaSize_ = 0;
-		dnaBytes_ = 0;
-		packedPos_ = 0;
+		return dnaBytes_;
+	}
+
+	uint32_t getDnaSize() const
+	{
+		return dnaSize_;
+	}
+
+	const std::string& getFilename() const
+	{
+		return filename_;
+	}
+
+	const std::vector<Region>& getMaskedRegions() const
+	{
+		return mRegions;
+	}
+
+	const std::string& getName() const
+	{
+		return name_;
+	}
+
+	const std::vector<Region>& getNRegions() const
+	{
+		return nRegions;
+	}
+
+	uint32_t getOffset() const
+	{
+		return offset_;
+	}
+
+	uint32_t getPackedPos() const
+	{
+		return packedPos_;
+	}
+
+	bool isSwapped() const
+	{
+		return swapped_;
 	}
 
 };
