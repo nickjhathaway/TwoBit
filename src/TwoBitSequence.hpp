@@ -28,8 +28,6 @@ class TwoBitSequence;
 
 std::ostream& operator<<(std::ostream& s, const TwoBit::TwoBitSequence& x);
 
-// TODO: make TwoBitSequence extend TwoBitSequenceMeta.
-
 namespace TwoBit
 {
 
