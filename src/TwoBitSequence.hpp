@@ -23,47 +23,33 @@
 
 namespace TwoBit
 {
-class TwoBitSequence;
-}
 
-std::ostream& operator<<(std::ostream& s, const TwoBit::TwoBitSequence& x);
-
-// TODO: make TwoBitSequence extend TwoBitSequenceMeta.
-
-namespace TwoBit
-{
-
-class TwoBitSequence
+class TwoBitSequence : public SequenceMeta
 {
 private:
 
 	static const uint32_t BUFFER_SIZE = 0x80000; //512k
 
 	std::ifstream file_;
-	const SequenceMeta& meta_;
 	char buffer_[BUFFER_SIZE];
 
 	friend class TwoBitFile;
 
-	// make it "printable"
-	friend std::ostream& ::operator<<(std::ostream& s, const TwoBitSequence& x);
-
-	TwoBitSequence(const SequenceMeta& meta) :
-			meta_(meta)
+	TwoBitSequence(const SequenceMeta& other) : SequenceMeta(other)
 	{
-		file_.open(meta_.filename_, std::ios::in | std::ios::binary);
+		file_.open(filename_, std::ios::in | std::ios::binary);
 	}
 
 public:
 
+	TwoBitSequence(const TwoBitSequence& other) : SequenceMeta(other)
+	{
+		file_.open(filename_, std::ios::in | std::ios::binary);
+	}
+
 	virtual ~TwoBitSequence()
 	{
 		file_.close();
-	}
-
-	TwoBitSequence(const TwoBitSequence& other) :
-			TwoBitSequence(other.meta_)
-	{
 	}
 
 	// delete some stuff.
@@ -74,9 +60,6 @@ public:
 	std::string& getSequence(std::string& buffer, const uint32_t& start = 0,
 			const uint32_t& end = 0, const bool reverseComplement = false,
 			const bool doMask = true);
-
-	// get reference to metadata
-	const SequenceMeta& getMetadata() const;
 
 };
 
