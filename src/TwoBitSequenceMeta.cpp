@@ -18,7 +18,7 @@
 
 std::ostream& operator<<(std::ostream& s, const TwoBit::TwoBitSequenceMeta& x)
 {
-	s << "[SequenceMeta name: " << x.name_ << ", offset: " << x.offset_
+	s << "[Sequence => name: " << x.name_ << ", offset: " << x.offset_
 			<< ", filename: " << x.filename_ << ", swapped: " << x.swapped_
 			<< ", dnaSize: " << x.dnaSize_ << ", dnaBytes: " << x.dnaBytes_
 			<< ", packedPos: " << x.packedPos_ << ", mRegions: "

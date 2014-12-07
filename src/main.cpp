@@ -54,7 +54,7 @@ int main(int argc, char** argv)
 		std::cout << tbf.size() << std::endl;
 
 		std::cout << "mRegions:" << std::endl;
-		for (const auto& r : tbs.getMetadata().getMaskedRegions())
+		for (const auto& r : tbs.getMaskedRegions())
 		{
 			std::cout << r.pos_ << ", " << r.action_ << std::endl;
 		}

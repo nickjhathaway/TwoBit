@@ -73,8 +73,47 @@ public:
 			const uint32_t& end = 0, const bool reverseComplement = false,
 			const bool doMask = true);
 
-	// get reference to metadata
-	const TwoBitSequenceMeta& getMetadata() const;
+
+	// delegated getters and setter
+
+
+	uint32_t getDnaBytes() const
+	{
+		return meta_.dnaBytes_;
+	}
+	uint32_t getDnaSize() const
+	{
+		return meta_.dnaSize_;
+	}
+	const std::string& getFilename() const
+	{
+		return meta_.filename_;
+	}
+	const std::vector<TwoBitSequenceMeta::Region>& getMaskedRegions() const
+	{
+		return meta_.mRegions;
+	}
+	const std::string& getName() const
+	{
+		return meta_.name_;
+	}
+	const std::vector<TwoBitSequenceMeta::Region>& getNRegions() const
+	{
+		return meta_.nRegions;
+	}
+	uint32_t getOffset() const
+	{
+		return meta_.offset_;
+	}
+	uint32_t getPackedPos() const
+	{
+		return meta_.packedPos_;
+	}
+	bool isSwapped() const
+	{
+		return meta_.swapped_;
+	}
+
 
 };
 

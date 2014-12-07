@@ -171,11 +171,6 @@ std::string& TwoBitSequence::getSequence(std::string& buffer,
 	return buffer;
 }
 
-const TwoBitSequenceMeta& TwoBitSequence::getMetadata() const
-{
-	return meta_;
-}
-
 } // namespace TwoBit
 
 std::ostream& operator<<(std::ostream& s, const TwoBit::TwoBitSequence& x)
