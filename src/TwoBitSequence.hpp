@@ -24,7 +24,7 @@
 namespace TwoBit
 {
 
-class TwoBitSequence: public TwoBitSequenceMeta
+class TwoBitSequence : public SequenceMeta
 {
 private:
 
@@ -35,16 +35,14 @@ private:
 
 	friend class TwoBitFile;
 
-	TwoBitSequence(const TwoBitSequenceMeta& other) :
-			TwoBitSequenceMeta(other)
+	TwoBitSequence(const SequenceMeta& other) : SequenceMeta(other)
 	{
 		file_.open(filename_, std::ios::in | std::ios::binary);
 	}
 
 public:
 
-	TwoBitSequence(const TwoBitSequence& other) :
-			TwoBitSequenceMeta(other)
+	TwoBitSequence(const TwoBitSequence& other) : SequenceMeta(other)
 	{
 		file_.open(filename_, std::ios::in | std::ios::binary);
 	}

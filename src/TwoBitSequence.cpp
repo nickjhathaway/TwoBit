@@ -90,12 +90,14 @@ std::string& TwoBitSequence::getSequence(std::string& buffer,
 			for (uint32_t j = 0; j < 8; j += 2)
 			{
 				// fast-forward N-regions to figure out whether we need to return N's or sequence.
-				while (prevn < nregionsize && nRegions[prevn].pos_ <= seqPos)
+				while (prevn < nregionsize
+						&& nRegions[prevn].pos_ <= seqPos)
 				{
 					n += nRegions[prevn++].action_;
 				}
 				// fast-forward mask-regions to figure out whether or not we need to mask.
-				while (prevm < mregionsize && mRegions[prevm].pos_ <= seqPos)
+				while (prevm < mregionsize
+						&& mRegions[prevm].pos_ <= seqPos)
 				{
 					m += mRegions[prevm++].action_;
 				}

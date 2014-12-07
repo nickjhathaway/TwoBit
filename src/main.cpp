@@ -53,12 +53,6 @@ int main(int argc, char** argv)
 
 		std::cout << tbf.size() << std::endl;
 
-		std::cout << "mRegions:" << std::endl;
-		for (const auto& r : tbs.getMaskedRegions())
-		{
-			std::cout << r.getPosition() << ", " << r.getAction() << std::endl;
-		}
-
 	} catch (std::exception& e)
 	{
 		std::cout << "Error: " << e.what() << std::endl;

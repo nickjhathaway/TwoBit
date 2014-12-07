@@ -47,7 +47,7 @@ private:
 	uint32_t reserved_;
 	std::string filename_;
 	std::ifstream file_;
-	std::unordered_map<std::string, TwoBitSequenceMeta> sequences_;
+	std::unordered_map<std::string, SequenceMeta> sequences_;
 	std::vector<std::string> sequenceNames_;
 
 	// util
@@ -101,8 +101,8 @@ private:
 
 	// create sequences from file
 	void createSequenceMeta();
-	void populateSequenceMeta(TwoBitSequenceMeta& meta);
-	void readRegions(std::vector<TwoBitSequenceMeta::Region>& out);
+	void populateSequenceMeta(SequenceMeta& meta);
+	void readRegions(std::vector<SequenceMeta::Region>& out);
 
 public:
 	// no-copy
