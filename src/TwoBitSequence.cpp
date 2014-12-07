@@ -46,23 +46,23 @@ std::string& TwoBitSequence::getSequence(std::string& buffer,
 	if (start == 0 && end == 0)
 	{
 		startNuc = 0; // if both are 0, take entire sequence
-		endNuc = dnaSize_;
+		endNuc = meta_.dnaSize_;
 	}
 	else
 	{
-		startNuc = std::min(dnaSize_ - 1, start);
-		endNuc = std::max(startNuc + 1, std::min(dnaSize_, end)); // < dnaSize, > startNuc
+		startNuc = std::min(meta_.dnaSize_ - 1, start);
+		endNuc = std::max(startNuc + 1, std::min(meta_.dnaSize_, end)); // < dnaSize, > startNuc
 	}
 
 	// calculate byte positions in file.
-	uint32_t startByte = packedPos_ + (startNuc / 4);
-	uint32_t endByte = packedPos_ + (endNuc / 4) + (endNuc % 4 > 0);
+	uint32_t startByte = meta_.packedPos_ + (startNuc / 4);
+	uint32_t endByte = meta_.packedPos_ + (endNuc / 4) + (endNuc % 4 > 0);
 
 	// resize buffer
 	buffer.resize(endNuc - startNuc);
 
 	// reading starts here.
-	uint32_t seqPos = (startByte - packedPos_) * 4; // we start at a byte position
+	uint32_t seqPos = (startByte - meta_.packedPos_) * 4; // we start at a byte position
 	uint32_t filePos = startByte;
 
 	// counters for N and mask regions
@@ -70,8 +70,8 @@ std::string& TwoBitSequence::getSequence(std::string& buffer,
 	int n = 0;
 	uint32_t prevm = 0;
 	uint32_t prevn = 0;
-	const uint32_t mregionsize = mRegions.size();
-	const uint32_t nregionsize = nRegions.size();
+	const uint32_t mregionsize = meta_.mRegions.size();
+	const uint32_t nregionsize = meta_.nRegions.size();
 
 	file_.seekg(filePos);
 	while (filePos < endByte)
@@ -91,15 +91,15 @@ std::string& TwoBitSequence::getSequence(std::string& buffer,
 			{
 				// fast-forward N-regions to figure out whether we need to return N's or sequence.
 				while (prevn < nregionsize
-						&& nRegions[prevn].pos_ <= seqPos)
+						&& meta_.nRegions[prevn].pos_ <= seqPos)
 				{
-					n += nRegions[prevn++].action_;
+					n += meta_.nRegions[prevn++].action_;
 				}
 				// fast-forward mask-regions to figure out whether or not we need to mask.
 				while (prevm < mregionsize
-						&& mRegions[prevm].pos_ <= seqPos)
+						&& meta_.mRegions[prevm].pos_ <= seqPos)
 				{
-					m += mRegions[prevm++].action_;
+					m += meta_.mRegions[prevm++].action_;
 				}
 
 				// if we are within the requested range, insert sequence into output vector
@@ -171,4 +171,15 @@ std::string& TwoBitSequence::getSequence(std::string& buffer,
 	return buffer;
 }
 
+const SequenceMeta& TwoBitSequence::getMetadata() const
+{
+	return meta_;
+}
+
 } // namespace TwoBit
+
+std::ostream& operator<<(std::ostream& s, const TwoBit::TwoBitSequence& x)
+{
+	s << x.meta_;
+	return s;
+}

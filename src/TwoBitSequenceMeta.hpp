@@ -58,18 +58,7 @@ private:
 	// make it "printable"
 	friend std::ostream& ::operator<<(std::ostream& s, const SequenceMeta& x);
 
-	SequenceMeta()
-	{
-		name_ = "";
-		offset_ = 0;
-		filename_ = "";
-		swapped_ = false;
-		dnaSize_ = 0;
-		dnaBytes_ = 0;
-		packedPos_ = 0;
-	}
-
-protected:
+public:
 	std::string name_;
 	uint32_t offset_;
 	std::string filename_;
@@ -80,7 +69,6 @@ protected:
 	std::vector<Region> nRegions; // N-s
 	std::vector<Region> mRegions; // Masked
 
-public:
 	SequenceMeta(const std::string& name, const uint32_t offset,
 			const std::string& filename, const bool swapped)
 	{
@@ -92,7 +80,16 @@ public:
 		dnaBytes_ = 0;
 		packedPos_ = 0;
 	}
-
+	SequenceMeta()
+	{
+		name_ = "";
+		offset_ = 0;
+		filename_ = "";
+		swapped_ = false;
+		dnaSize_ = 0;
+		dnaBytes_ = 0;
+		packedPos_ = 0;
+	}
 };
 
 } // namespace TwoBit
