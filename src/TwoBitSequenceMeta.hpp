@@ -22,16 +22,17 @@
 
 namespace TwoBit
 {
-class SequenceMeta;
+class TwoBitSequenceMeta;
+class TwoBitSequence;
 class TwoBitFile;
 }
 
-std::ostream& operator<<(std::ostream& s, const TwoBit::SequenceMeta& x);
+std::ostream& operator<<(std::ostream& s, const TwoBit::TwoBitSequenceMeta& x);
 
 namespace TwoBit
 {
 
-class SequenceMeta
+class TwoBitSequenceMeta
 {
 
 	// Contains enough information to open a two-bit file and read a specific
@@ -54,11 +55,12 @@ private:
 	};
 
 	friend class TwoBitFile;
+	friend class TwoBitSequence;
 
 	// make it "printable"
-	friend std::ostream& ::operator<<(std::ostream& s, const SequenceMeta& x);
+	friend std::ostream& ::operator<<(std::ostream& s,
+			const TwoBitSequenceMeta& x);
 
-public:
 	std::string name_;
 	uint32_t offset_;
 	std::string filename_;
@@ -69,7 +71,7 @@ public:
 	std::vector<Region> nRegions; // N-s
 	std::vector<Region> mRegions; // Masked
 
-	SequenceMeta(const std::string& name, const uint32_t offset,
+	TwoBitSequenceMeta(const std::string& name, const uint32_t offset,
 			const std::string& filename, const bool swapped)
 	{
 		name_ = name;
@@ -80,7 +82,8 @@ public:
 		dnaBytes_ = 0;
 		packedPos_ = 0;
 	}
-	SequenceMeta()
+
+	TwoBitSequenceMeta()
 	{
 		name_ = "";
 		offset_ = 0;
@@ -89,6 +92,44 @@ public:
 		dnaSize_ = 0;
 		dnaBytes_ = 0;
 		packedPos_ = 0;
+	}
+
+public:
+	uint32_t getDnaBytes() const
+	{
+		return dnaBytes_;
+	}
+	uint32_t getDnaSize() const
+	{
+		return dnaSize_;
+	}
+	const std::string& getFilename() const
+	{
+		return filename_;
+	}
+	const std::vector<Region>& getMaskedRegions() const
+	{
+		return mRegions;
+	}
+	const std::string& getName() const
+	{
+		return name_;
+	}
+	const std::vector<Region>& getNRegions() const
+	{
+		return nRegions;
+	}
+	uint32_t getOffset() const
+	{
+		return offset_;
+	}
+	uint32_t getPackedPos() const
+	{
+		return packedPos_;
+	}
+	bool isSwapped() const
+	{
+		return swapped_;
 	}
 };
 

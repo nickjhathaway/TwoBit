@@ -16,7 +16,7 @@
 
 #include "TwoBitSequenceMeta.hpp"
 
-std::ostream& operator<<(std::ostream& s, const TwoBit::SequenceMeta& x)
+std::ostream& operator<<(std::ostream& s, const TwoBit::TwoBitSequenceMeta& x)
 {
 	s << "[SequenceMeta name: " << x.name_ << ", offset: " << x.offset_
 			<< ", filename: " << x.filename_ << ", swapped: " << x.swapped_

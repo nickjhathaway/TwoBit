@@ -38,7 +38,7 @@ private:
 	static const uint32_t BUFFER_SIZE = 0x80000; //512k
 
 	std::ifstream file_;
-	const SequenceMeta& meta_;
+	const TwoBitSequenceMeta& meta_;
 	char buffer_[BUFFER_SIZE];
 
 	friend class TwoBitFile;
@@ -46,7 +46,7 @@ private:
 	// make it "printable"
 	friend std::ostream& ::operator<<(std::ostream& s, const TwoBitSequence& x);
 
-	TwoBitSequence(const SequenceMeta& meta) :
+	TwoBitSequence(const TwoBitSequenceMeta& meta) :
 			meta_(meta)
 	{
 		file_.open(meta_.filename_, std::ios::in | std::ios::binary);
@@ -74,7 +74,7 @@ public:
 			const bool doMask = true);
 
 	// get reference to metadata
-	const SequenceMeta& getMetadata() const;
+	const TwoBitSequenceMeta& getMetadata() const;
 
 };
 

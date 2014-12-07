@@ -171,7 +171,7 @@ std::string& TwoBitSequence::getSequence(std::string& buffer,
 	return buffer;
 }
 
-const SequenceMeta& TwoBitSequence::getMetadata() const
+const TwoBitSequenceMeta& TwoBitSequence::getMetadata() const
 {
 	return meta_;
 }

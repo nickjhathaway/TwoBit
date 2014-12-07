@@ -99,12 +99,12 @@ void TwoBitFile::createSequenceMeta()
 
 		// add meta data.
 		sequences_.emplace(seqNameStr,
-				SequenceMeta(seqNameStr, offset, filename_, swapped_));
+				TwoBitSequenceMeta(seqNameStr, offset, filename_, swapped_));
 		sequenceNames_.push_back(seqNameStr);
 	}
 }
 
-void TwoBitFile::populateSequenceMeta(SequenceMeta& meta)
+void TwoBitFile::populateSequenceMeta(TwoBitSequenceMeta& meta)
 {
 	// seek to offset and read actual sequence meta data.
 
@@ -127,7 +127,7 @@ void TwoBitFile::populateSequenceMeta(SequenceMeta& meta)
 
 }
 
-void TwoBitFile::readRegions(std::vector<SequenceMeta::Region>& out)
+void TwoBitFile::readRegions(std::vector<TwoBitSequenceMeta::Region>& out)
 {
 	uint32_t count;
 	std::vector<uint32_t> starts;
@@ -156,7 +156,7 @@ void TwoBitFile::readRegions(std::vector<SequenceMeta::Region>& out)
 		out.emplace_back(starts[i] + lengths[i], -1);
 	}
 	std::sort(out.begin() + 1, out.end(),
-			[](const SequenceMeta::Region& a, const SequenceMeta::Region& b)
+			[](const TwoBitSequenceMeta::Region& a, const TwoBitSequenceMeta::Region& b)
 			{
 				return a.pos_ < b.pos_;
 			});
