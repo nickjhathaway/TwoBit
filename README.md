@@ -7,5 +7,7 @@ that, each TwoBitSequence has it's own read-only file handle to the 2-bit
 data.
 
 ## TODO
-- probably take out buffering and rely on ifstream, see https://stackoverflow.com/questions/12757904/how-to-optimize-reading-and-writing-by-playing-with-buffer-size.
+- probably take out buffering and rely on ifstream, see https://stackoverflow.com/questions/12757904/how-to-optimize-reading-and-writing-by-playing-with-buffer-size.  
+- make TwoBitSequence in input stream? https://stackoverflow.com/questions/14086417/how-to-write-custom-input-stream-in-c
+
 

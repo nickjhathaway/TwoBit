@@ -8,55 +8,74 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		TwoBit::TwoBitFile tbf("/Users/vanderva/.ucscgenome/hg19.2bit");
+/*
+		TwoBit::TwoBitFile twobitFile("/Users/vanderva/.ucscgenome/hg19.2bit");
+		TwoBit::TwoBitSequence twobitSequence = twobitFile["chr1"];
+		std::cout << twobitSequence << std::endl; // print meta
 
-		TwoBit::TwoBitSequence tbs = tbf["chr1"];
+		std::string buffer;
 
-		std::cout << tbs << std::endl;
+		twobitSequence.getSequence(buffer, 9990, 21000);
+		std::cout << buffer << std::endl;
 
-		std::string bla;
+		twobitSequence.getSequence(buffer, 9990, 21000, false, false);
+		std::cout << buffer << std::endl;
 
-		tbs.getSequence(bla, 9990, 21000, false, false);
-		std::cout << "bla.size(): " << bla.size() << std::endl;
-		std::cout << "bla.capacity(): " << bla.capacity() << std::endl;
-		std::cout << std::string(bla.begin(), bla.end()) << std::endl;
+		twobitSequence.getSequence(buffer, 9990, 21000, true, false);
+		std::cout << buffer << std::endl;
 
-		tbs.getSequence(bla, 9990, 21000, true, false);
-		std::cout << "bla.size(): " << bla.size() << std::endl;
-		std::cout << "bla.capacity(): " << bla.capacity() << std::endl;
-		std::cout << std::string(bla.begin(), bla.end()) << std::endl;
+		twobitSequence.getSequence(buffer);
+		std::cout << "buffer.size(): " << buffer.size() << std::endl;
+		std::cout << "buffer.capacity(): " << buffer.capacity() << std::endl;
 
-		tbs.getSequence(bla);
-		std::cout << "bla.size(): " << bla.size() << std::endl;
-		std::cout << "bla.capacity(): " << bla.capacity() << std::endl;
-
-		tbs.getSequence(bla, 9991, 21017, true, false);
-		std::cout << "bla.size(): " << bla.size() << std::endl;
-		std::cout << "bla.capacity(): " << bla.capacity() << std::endl;
-		std::cout << std::string(bla.begin(), bla.end()) << std::endl;
-
-		tbs.getSequence(bla, 9990, 10005, false, false);
-		std::cout << "bla.size(): " << bla.size() << std::endl;
-		std::cout << "bla.capacity(): " << bla.capacity() << std::endl;
-		std::cout << std::string(bla.begin(), bla.end()) << std::endl;
-
-		tbs.getSequence(bla, 9990, 10005, true, false);
-		std::cout << "bla.size(): " << bla.size() << std::endl;
-		std::cout << "bla.capacity(): " << bla.capacity() << std::endl;
-		std::cout << std::string(bla.begin(), bla.end()) << std::endl;
-
-		for (const std::string& s : tbf.sequenceNames())
+		std::cout << twobitFile.size() << std::endl;
+		for (const std::string& s : twobitFile.sequenceNames())
 		{
 			std::cout << s << " ";
 		}
 		std::cout << std::endl;
 
-		std::cout << tbf.size() << std::endl;
-
-		std::cout << "mRegions:" << std::endl;
-		for (const auto& r : tbs.getMaskedRegions())
+		std::cout << "Masked regions:" << std::endl;
+		for (const auto& r : twobitSequence.getMaskedRegions())
 		{
-			std::cout << r.pos_ << ", " << r.action_ << std::endl;
+			if (r.action_ > 0)
+			{
+				std::cout << twobitSequence.getName() << ":" << r.pos_ << "-";
+			}
+			else if (r.action_ < 0)
+			{
+				std::cout << r.pos_ << std::endl;
+			}
+		}
+		std::cout << std::endl;
+
+		std::cout << "N-regions:" << std::endl;
+		for (const auto& r : twobitSequence.getNRegions())
+		{
+			if (r.action_ > 0)
+			{
+				std::cout << twobitSequence.getName() << ":" << r.pos_ << "-";
+			}
+			else if (r.action_ < 0)
+			{
+				std::cout << r.pos_ << std::endl;
+			}
+		}
+		std::cout << std::endl;
+*/
+		// TODO: it would be convenient and efficient to have TwoBitSequence be an input stream.
+
+		TwoBit::TwoBitFile f("/Users/vanderva/.ucscgenome/hg19.2bit");
+		std::string buffer;
+		for (const std::string& s : f.sequenceNames())
+		{
+			f[s].getSequence(buffer);
+			std::cout << ">" << s << std::endl;
+			for (uint32_t i = 0; i < buffer.size(); i += 80)
+			{
+				std::cout << buffer.substr(i, 80) << '\n';
+			}
+			std::cout.flush();
 		}
 
 	} catch (std::exception& e)
