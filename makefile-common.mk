@@ -1,10 +1,11 @@
 UNAME_S := $(shell uname -s)
 CPP = clang++
 LOCAL_PATH = $(EXT_PATH)/local
+MAKE_FILES=$(realpath Makefile makefile-common.mk)
 
 # clang++
 CXXFLAGS = -std=c++11 -stdlib=libc++ -Wall
-CXXOPT = -O2 -march=native -mtune=native -funroll-loops -fstack-protector
+CXXOPT = -O2 -march=native -mtune=native -funroll-loops -fstack-protector -ffast-math
 
 # g++
 #CXXFLAGS = -std=c++11 -Wall

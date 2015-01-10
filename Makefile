@@ -7,9 +7,7 @@ AR = ar
 # main paths
 EXT_PATH=$(realpath external)
 SCRIPTS_PATH=$(realpath ./scripts)
-
 LIB_EXCLUDE := src/main.cpp
-
 
 HEADERS = $(call rwildcard, src/, *.h) \
 	$(call rwildcard, src/, *.hpp)
@@ -28,9 +26,10 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 	mkdir -p bin
 
-$(OBJ_DIR)/%.o: %.cpp $(HEADERS)
+$(OBJ_DIR)/%.o: %.cpp $(HEADERS) $(MAKE_FILES)
 	@mkdir -p $(OBJ_DIR)/$(shell dirname $<)
-	$(CPP) -fpermissive $(COMMON_OPT) -c -o $@ $<
+	$(CPP) $(COMMON_OPT) -c -o $@ $<
+#	$(CPP) -fpermissive $(COMMON_OPT) -c -o $@ $<
 
 $(BIN): $(OBJ)
 	$(CPP) -o $@ $^ $(LD_FLAGS)

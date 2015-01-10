@@ -31,7 +31,7 @@ TwoBitFile::TwoBitFile(const std::string& filename) :
 	{
 		readTwoBitHeader();
 		createSequenceMeta();
-		for (auto& meta : sequences_)
+		for (std::pair<const std::string, TwoBitSequenceMeta>& meta : sequences_)
 		{
 			populateSequenceMeta(meta.second);
 		}
