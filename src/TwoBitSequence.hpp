@@ -73,9 +73,7 @@ public:
 			const uint32_t& end = 0, const bool reverseComplement = false,
 			const bool doMask = true);
 
-
 	// delegated getters and setter
-
 
 	uint32_t getDnaBytes() const
 	{
@@ -113,7 +111,6 @@ public:
 	{
 		return meta_.swapped_;
 	}
-
 
 };
 

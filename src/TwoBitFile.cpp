@@ -27,16 +27,13 @@ TwoBitFile::TwoBitFile(const std::string& filename) :
 				0), filename_(filename)
 {
 	file_.open(filename_, std::ios::in | std::ios::binary);
-	try
-	{
+	try {
 		readTwoBitHeader();
 		createSequenceMeta();
-		for (std::pair<const std::string, TwoBitSequenceMeta>& meta : sequences_)
-		{
+		for (std::pair<const std::string, TwoBitSequenceMeta>& meta : sequences_) {
 			populateSequenceMeta(meta.second);
 		}
-	} catch (Exception& e)
-	{
+	} catch (Exception& e) {
 		file_.close();
 		throw(e);
 	}
@@ -47,23 +44,15 @@ void TwoBitFile::readTwoBitHeader()
 {
 	// Read first 16 bytes of 2-bit file to get things going
 
-	if (file_.read(reinterpret_cast<char*>(&magic_), 4))
-	{
-		if (magic_ == MAGIC_NUMBER)
-		{
+	if (file_.read(reinterpret_cast<char*>(&magic_), 4)) {
+		if (magic_ == MAGIC_NUMBER) {
 			swapped_ = false;
-		}
-		else if (magic_ == REVERSE_MAGIC_NUMBER)
-		{
+		} else if (magic_ == REVERSE_MAGIC_NUMBER) {
 			swapped_ = true;
-		}
-		else
-		{
+		} else {
 			throw Exception("Invalid magic number. Bad 2-bit file.");
 		}
-	}
-	else
-	{
+	} else {
 		throw Exception("Error reading file.");
 	}
 
@@ -72,12 +61,10 @@ void TwoBitFile::readTwoBitHeader()
 	reserved_ = nextInt();		// always zero
 
 	// integrity check
-	if (VERSION != version_)
-	{
+	if (VERSION != version_) {
 		throw Exception("Unexpected version number. Bad 2-bit file.");
 	}
-	if (RESERVED != reserved_)
-	{
+	if (RESERVED != reserved_) {
 		throw Exception("Unexpected data. Bad 2-bit file.");
 	}
 }
@@ -90,8 +77,7 @@ void TwoBitFile::createSequenceMeta()
 	char seqName[SEQNAME_MAX_LEN];
 	std::string seqNameStr; // name as std::string
 
-	for (uint32_t i = 0; i < sequenceCount_; ++i)
-	{
+	for (uint32_t i = 0; i < sequenceCount_; ++i) {
 		seqNameLen = nextChar(); // length
 		file_.read(seqName, seqNameLen); // sequence name
 		seqNameStr = std::string(seqName, seqNameLen);
@@ -117,8 +103,7 @@ void TwoBitFile::populateSequenceMeta(TwoBitSequenceMeta& meta)
 	readRegions(meta.mRegions); // mask regions
 
 	// check. this number should be zero as per the spec.
-	if (0 != nextInt())
-	{
+	if (0 != nextInt()) {
 		throw Exception("Unexpected data. Bad 2-bit file.");
 	}
 
@@ -134,13 +119,11 @@ void TwoBitFile::readRegions(std::vector<TwoBitSequenceMeta::Region>& out)
 	std::vector<uint32_t> lengths;
 
 	count = nextInt();
-	for (uint32_t i = 0; i < count; ++i)
-	{
+	for (uint32_t i = 0; i < count; ++i) {
 		// read starts of regions
 		starts.emplace_back(nextInt());
 	}
-	for (uint32_t i = 0; i < count; ++i)
-	{
+	for (uint32_t i = 0; i < count; ++i) {
 		// read lengths of regions
 		lengths.emplace_back(nextInt());
 	}
@@ -150,8 +133,7 @@ void TwoBitFile::readRegions(std::vector<TwoBitSequenceMeta::Region>& out)
 	out.clear();
 	out.reserve(count * 2);
 	out.emplace_back(0, 0); // filler, makes logic a little easier
-	for (uint32_t i = 0; i < count; ++i)
-	{
+	for (uint32_t i = 0; i < count; ++i) {
 		out.emplace_back(starts[i], 1);
 		out.emplace_back(starts[i] + lengths[i], -1);
 	}
@@ -165,12 +147,9 @@ void TwoBitFile::readRegions(std::vector<TwoBitSequenceMeta::Region>& out)
 TwoBitSequence TwoBitFile::operator[](const std::string& s) const
 {
 	auto iter = sequences_.find(s);
-	if (iter != sequences_.end())
-	{
+	if (iter != sequences_.end()) {
 		return (TwoBitSequence(iter->second));
-	}
-	else
-	{
+	} else {
 		throw Exception("Unknown sequence '" + s + "'.");
 	}
 }

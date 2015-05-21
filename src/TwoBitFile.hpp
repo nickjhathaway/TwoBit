@@ -61,23 +61,16 @@ private:
 			char bytes[4];
 		} in, out;
 
-		if (file_.read(reinterpret_cast<char*>(&in), 4))
-		{
-			if (swapped_)
-			{
-				for (uint32_t i = 0; i < 4; ++i)
-				{
+		if (file_.read(reinterpret_cast<char*>(&in), 4)) {
+			if (swapped_) {
+				for (uint32_t i = 0; i < 4; ++i) {
 					out.bytes[3 - i] = in.bytes[i];
 				}
 				return out.uint;
-			}
-			else
-			{
+			} else {
 				return in.uint;
 			}
-		}
-		else
-		{
+		} else {
 			throw Exception("Error reading file.");
 		}
 	}
@@ -86,12 +79,9 @@ private:
 	inline const unsigned char nextChar()
 	{
 		char out;
-		if (file_.read(&out, 1))
-		{
+		if (file_.read(&out, 1)) {
 			return out;
-		}
-		else
-		{
+		} else {
 			throw Exception("Error reading file.");
 		}
 	}
