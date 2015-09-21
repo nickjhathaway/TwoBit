@@ -33,3 +33,9 @@ TAGS
 /external
 /output
 /bin
+
+# Eclipse settings
+/.cproject
+/.project
+/.settings
+
