@@ -1,7 +1,5 @@
 # 2-bit reader
 
-Current version 1.0
-
 This is a (work in progress) reader implementation, based on the
 specs at UCSC, http://genome.ucsc.edu/FAQ/FAQformat#format7. The
 implementation is intended to be more or less thread safe; to achieve

@@ -39,3 +39,6 @@ TAGS
 /.project
 /.settings
 
+/docs/man/*
+/build/*
+*.pyc
