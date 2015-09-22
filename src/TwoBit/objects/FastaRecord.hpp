@@ -35,7 +35,7 @@ public:
 	std::vector<uint32_t> nSizes_;/**< The sizes of the n regions*/
 	std::vector<uint32_t> maskStarts_;/**< The start sites of the masked regions*/
 	std::vector<uint32_t> maskSizes_;/**< The sizes of the masked regions*/
-	uint32_t reserved_;/**< Reserved for future use in the twobit format*/
+	uint32_t reserved_ = 0;/**< Reserved for future use in the twobit format*/
 	/**@brief convert seq_ into a vector of unsinged char with two bits per base
 	 *
 	 * @return seq_ converted into a vec of unsigned char with two bits per base info
