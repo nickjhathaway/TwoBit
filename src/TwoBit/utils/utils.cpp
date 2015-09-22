@@ -1,5 +1,5 @@
 #include "utils.hpp"
-
+#include <string.h>
 
 
 namespace TwoBit {
@@ -24,7 +24,6 @@ void writeString(std::ofstream & out, std::string str) {
 
 
 unsigned char packDna4(const std::string & str, uint32_t pos){
-	initNtValNoN();
 	unsigned char out = 0;
 	int bVal;
 	for(int count = 0; count < 4; ++count){
@@ -37,7 +36,6 @@ unsigned char packDna4(const std::string & str, uint32_t pos){
 
 
 void unknownToN(std::string & s){
-	initNtChars();
 	for(auto & c : s){
 		if(ntChars[c] == 0){
 			if(isupper(c)){

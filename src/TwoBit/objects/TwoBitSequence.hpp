@@ -111,14 +111,26 @@ public:
 	{
 		return meta_.nRegions;
 	}
+	/**@brief get file offset
+	 *
+	 * @return
+	 */
 	uint32_t getOffset() const
 	{
 		return meta_.offset_;
 	}
+	/**@brief Get the packedPos in the file
+	 *
+	 * @return the packed pos in met_
+	 */
 	uint32_t getPackedPos() const
 	{
 		return meta_.packedPos_;
 	}
+	/**@brief Determine if bits are swapped
+	 *
+	 * @return bool if bits are swapped
+	 */
 	bool isSwapped() const
 	{
 		return meta_.swapped_;

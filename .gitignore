@@ -41,4 +41,5 @@ TAGS
 
 /docs/man/*
 /build/*
-*.pyc
+
+compfile.mk

@@ -194,6 +194,7 @@ endif
 #CPPPROGUTILS
 ifeq ($(USE_CPPPROGUTILS),1)
 	COMLIBS += -I$(LOCAL_PATH)/cppprogutils
+	LD_FLAGS += -lpthread
 endif
 
 #CATCH

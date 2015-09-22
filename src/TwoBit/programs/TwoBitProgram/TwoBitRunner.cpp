@@ -57,8 +57,6 @@ int TwoBitRunner::faToTwoBit(std::map<std::string, std::string> inputCommands) {
 	setUp.setOption(overWrite, "--overWrite",
 			"Whether to overwrite the file if one is given by --out");
 	setUp.finishSetUp(std::cout);
-	initNtChars();
-	initNtValNoN();
 	cppprogutils::appendAsNeeded(outFilename, ".2bit");
 	std::ofstream out;
 	//check if output file exists
