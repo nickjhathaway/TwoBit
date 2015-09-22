@@ -3,7 +3,7 @@ realpathMac() {
     [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
 }
 
-if [ $(uname) == "Linux" ]; then
+if [ $(uname) != "Darwin" ]; then
 	exit
 fi
 
