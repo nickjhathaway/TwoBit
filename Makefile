@@ -29,6 +29,7 @@ BIN = $(addsuffix $(CXXOUTNAME), bin/)
 LIBNAME = $(addsuffix $(CXXOUTNAME), lib)
 DYLIB = $(addprefix $(addsuffix $(LIBNAME), $(LIB_DIR)/), .dylib)
 SOLIB = $(addprefix $(addsuffix $(LIBNAME), $(LIB_DIR)/), .so)
+CXXFLAGS += -Wno-missing-braces
 COMMON = $(CXXFLAGS) $(CXXOPT) $(COMLIBS)
 
 
