@@ -31,7 +31,7 @@ DYLIB = $(addprefix $(addsuffix $(LIBNAME), $(LIB_DIR)/), .dylib)
 SOLIB = $(addprefix $(addsuffix $(LIBNAME), $(LIB_DIR)/), .so)
 COMMON = $(CXXFLAGS) $(CXXOPT) $(COMLIBS)
 
-
+CXXFLAGS += -Wno-missing-braces
 
 
 -include do_preReqs
