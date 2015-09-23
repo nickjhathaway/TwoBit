@@ -112,6 +112,7 @@ ifeq ($(USE_BIBCPP),1)
 	USE_BOOST=1
 	LD_FLAGS += -lpthread
 	USE_CPPITERTOOLS=1
+	USE_PSTREAMS=1
 	#currently no compiled components so no need for library flags
 	#uncomment below in the future if there parts of the package need to be compiled
 	#LD_FLAGS += -Wl,-rpath,$(LOCAL_PATH)/bibcpp/lib \
@@ -126,6 +127,7 @@ ifeq ($(USE_BIBCPPDEV),1)
 	USE_BOOST=1
 	LD_FLAGS += -lpthread
 	USE_CPPITERTOOLS=1
+	USE_PSTREAMS=1
 	#currently no compiled components so no need for library flags
 	#uncomment below in the future if there parts of the package need to be compiled
 	#LD_FLAGS += -Wl,-rpath,$(LOCAL_PATH)/bibcppDev/lib \
@@ -142,8 +144,13 @@ ifeq ($(USE_CPPPROGUTILS),1)
 endif
 
 #CPPITERTOOLS
-ifeq ($(USE_JSONCPP),1)
+ifeq ($(USE_CPPITERTOOLS),1)
 	COMLIBS += -I$(LOCAL_PATH)/cppitertools
+endif
+
+#PSTREAMS
+ifeq ($(USE_PSTREAMS),1)
+	COMLIBS += -I$(LOCAL_PATH)/pstreams
 endif
 
 #jsoncpp

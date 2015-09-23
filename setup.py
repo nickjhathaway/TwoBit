@@ -480,7 +480,7 @@ make COMPFILE=compfile.mk -j {num_cores}
     def updateBibProjects(self, libs):
         for l in libs:
             libLower = l.lower()
-            if libLower in self.BibProjects:
+            if libLower in self.bibProjects:
                 self.updateBibProject(libLower)
     
     def __buildFromGit(self, i, cmd):
@@ -856,7 +856,10 @@ ln -s {local_dir}/liblinear.so.1 {local_dir}/liblinear.so
         self.__git(self.__path('zi_lib'))
         
     def pstreams(self):
-        self.__git(self.__path('pstreams'))
+        pspaths = self.__path('pstreams')
+        os.mkdir(pspaths.local_dir)
+        gitCmd = "git clone {url} {d}".format(url=pspaths.url, d=shellquote(os.path.join(pspaths.local_dir, "pstreams")))
+        Utils.run(gitCmd)
 
     def cppitertools(self):
         cppitpaths = self.__path('cppitertools')
@@ -882,9 +885,7 @@ cp -a * {local_dir}/
         self.__build(i, cmd)
 
     def cppprogutils(self):
-        version = "1.0"
-        branch = "develop"
-        self.__gitTag(self.__path('cppprogutils'), branch)
+        self.__git(self.__path('cppprogutils'))
 
     def catch(self):
         self.__git(self.__path('catch'))
@@ -953,6 +954,7 @@ def main():
     if args.updateBibProjects:
         projectsSplit = args.updateBibProjects.split(",")
         s.updateBibProjects(projectsSplit)
+        return 0
     if args.printLibs:
         s.printAvailableSetUps()
     elif args.addBashCompletion:
@@ -965,7 +967,9 @@ def main():
     else:
         if len(s.setUpsNeeded) == 0:
             s.printAvailableSetUps()
+            return 1
         else:
             s.setup()
+            return 0
 
 main()
