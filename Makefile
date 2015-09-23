@@ -29,7 +29,6 @@ BIN = $(addsuffix $(CXXOUTNAME), bin/)
 LIBNAME = $(addsuffix $(CXXOUTNAME), lib)
 DYLIB = $(addprefix $(addsuffix $(LIBNAME), $(LIB_DIR)/), .dylib)
 SOLIB = $(addprefix $(addsuffix $(LIBNAME), $(LIB_DIR)/), .so)
-CXXFLAGS += -Wno-missing-braces
 COMMON = $(CXXFLAGS) $(CXXOPT) $(COMLIBS)
 
 
@@ -39,11 +38,9 @@ COMMON = $(CXXFLAGS) $(CXXOPT) $(COMLIBS)
 ############ main
 .PHONY: all
 all: do_preReqs $(OBJ_DIR) $(BIN) 
+ifeq ($(UNAME_S), Darwin)
 	scripts/setUpScripts/fixDyLinking_mac.sh bin $(EXT_PATH)
-	
-.PHONY: dev
-dev: do_preReqs $(OBJ_DIR) $(BIN) $(PROTO) $(BIOALG) $(EULER) $(QTTEST) 
-	scripts/setUpScripts/fixDyLinking_mac.sh bin $(EXT_PATH)	
+endif
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
@@ -82,7 +79,9 @@ $(SOLIB): $(OBJNOMAIN)
 ############ dylibLibrary
 .PHONY: dylibLibrary
 dylibLibrary: $(OBJ_DIR) $(DYLIB)
+ifeq ($(UNAME_S), Darwin)
 	scripts/setUpScripts/fixDyLinking_mac.sh lib $(EXT_PATH)
+endif
 $(DYLIB): $(OBJNOMAIN)
 	$(CXX) $(CXXFLAGS) $(CXXOPT) -dynamiclib -o $@ $^ $(LD_FLAGS) 
 
