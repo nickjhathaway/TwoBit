@@ -885,7 +885,9 @@ cp -a * {local_dir}/
         self.__build(i, cmd)
 
     def cppprogutils(self):
-        self.__git(self.__path('cppprogutils'))
+        branch = "develop"
+        version = "2"
+        self.__gitTag(self.__path('cppprogutils'), branch)
 
     def catch(self):
         self.__git(self.__path('catch'))
