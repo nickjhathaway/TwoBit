@@ -1,4 +1,5 @@
 UNAME_S := $(shell uname -s)
+#EXT_PATH should be defined in the main Makefile
 LOCAL_PATH = $(EXT_PATH)/local
 #LD_FLAGS += 
 #defaults for most progjects

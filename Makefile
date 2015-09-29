@@ -42,7 +42,7 @@ TESTDIR=test
 
 ###compiler options
 CXXFLAGS += $(ENV_CXXFLAGS)
-#CXXFLAGS += -Wno-missing-braces
+CXXFLAGS += -Wno-missing-braces
 COMMON = $(CXXFLAGS) $(CXXOPT) $(COMLIBS)
 
 ############ default for calling make with no arguments
