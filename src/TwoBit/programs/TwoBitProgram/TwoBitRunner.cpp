@@ -51,11 +51,16 @@ int TwoBitRunner::faToTwoBit(std::map<std::string, std::string> inputCommands) {
 	std::string inputFilename = "";
 	std::string outFilename = "";
 	bool overWrite = false;
+	bool trimNameAtWhitepsace = false;
 	setUp.setOption(inputFilename, "--in,-i", "Input fasta filename, can be several files seperated by commas", true);
 	setUp.setOption(outFilename, "--out,-o",
 			"Name of an output file", true);
 	setUp.setOption(overWrite, "--overWrite",
 			"Whether to overwrite the file if one is given by --out");
+	setUp.setOption(overWrite, "--overWrite",
+			"Whether to overwrite the file if one is given by --out");
+	setUp.setOption(trimNameAtWhitepsace, "--trimNameAtWhitepsace",
+				"Whether to trim the names of the fasta records at the first whitespace");
 	setUp.finishSetUp(std::cout);
 	cppprogutils::appendAsNeeded(outFilename, ".2bit");
 	std::ofstream out;
@@ -71,7 +76,7 @@ int TwoBitRunner::faToTwoBit(std::map<std::string, std::string> inputCommands) {
 	for(const auto & fName : toks){
 		std::ifstream in(fName);
 		std::unique_ptr<FastaRecord> seq;
-		while (readNextFasta(in, seq)) {
+		while (readNextFasta(in, seq, trimNameAtWhitepsace)) {
 			seqs.emplace_back(std::move(seq));
 		}
 	}

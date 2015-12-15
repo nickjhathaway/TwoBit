@@ -17,6 +17,6 @@ namespace TwoBit {
  * @param seq A pointer to a seqInfo to replace with the info with the next read in the fasta file
  * @return A bool whether the function was able to read from the file
  */
-bool readNextFasta(std::istream & in, std::unique_ptr<FastaRecord> & seq);
+bool readNextFasta(std::istream & in, std::unique_ptr<FastaRecord> & seq, bool trimNameAtWhitespace = false);
 
 }  // namespace TwoBit

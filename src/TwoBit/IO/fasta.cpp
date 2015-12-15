@@ -7,7 +7,7 @@ namespace TwoBit {
 
 
 
-bool readNextFasta(std::istream & in, std::unique_ptr<FastaRecord> & seq) {
+bool readNextFasta(std::istream & in, std::unique_ptr<FastaRecord> & seq, bool trimNameAtWhitespace) {
 	if (!in.good()) {
 		return false;
 	}
@@ -20,7 +20,14 @@ bool readNextFasta(std::istream & in, std::unique_ptr<FastaRecord> & seq) {
 			std::getline(in, line);
 			buildingSeq.append(line);
 		}
-		seq = TwoBit::make_unique<FastaRecord>(name.substr(1), std::move(buildingSeq));
+		if (trimNameAtWhitespace && name.find(" ") != std::string::npos) {
+			//not really safe if name starts with space but hopefully no would do that
+			seq = TwoBit::make_unique<FastaRecord>(name.substr(1, name.find(" ") - 1),
+					std::move(buildingSeq));
+		} else {
+			seq = TwoBit::make_unique<FastaRecord>(name.substr(1),
+					std::move(buildingSeq));
+		}
 		return true;
 	} else {
 		std::stringstream ss;
