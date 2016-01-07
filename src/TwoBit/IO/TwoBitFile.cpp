@@ -164,5 +164,9 @@ const uint32_t TwoBitFile::size() const
 	return sequences_.size();
 }
 
+std::string TwoBitFile::getFilename() const{
+	return filename_;
+}
+
 } // namespace TwoBit
 

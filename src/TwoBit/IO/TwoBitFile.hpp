@@ -133,6 +133,12 @@ public:
 	 */
 	const uint32_t size() const;
 
+	/**@brief Get the filename of the twobit file
+	 *
+	 * @return the filename of the twobit file
+	 */
+	std::string getFilename() const;
+
 };
 
 } // namespace TwoBit
