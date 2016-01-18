@@ -31,7 +31,7 @@ bool readNextFasta(std::istream & in, std::unique_ptr<FastaRecord> & seq, bool t
 		return true;
 	} else {
 		std::stringstream ss;
-		ss << "error in reading fasta file, line doesn't begin with >, starts with: "
+		ss << "error in reading fasta file in " << __PRETTY_FUNCTION__ << ", line doesn't begin with >, starts with: "
 			 << std::endl;
 		ss << in.peek() << std::endl;
 		throw std::runtime_error { ss.str() };
