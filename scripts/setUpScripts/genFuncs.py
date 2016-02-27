@@ -10,7 +10,7 @@ class genHelper:
         availableLibs = ["CPPITERTOOLS","CPPPROGUTILS","ZI_LIB","BOOST","R","BAMTOOLS","CPPCMS","MATHGL","ARMADILLO",
                          "MLPACK","LIBLINEAR","PEAR","CURL","GTKMM", "BIBSEQ", "BIBCPP", "SEEKDEEP", 
                          "BIBSEQDEV", "SEEKDEEPDEV", "CATCH", "JSONCPP",
-                          "TWOBIT", "SEQSERVER","NJHRINSIDE", "PSTREAMS", "MONGOC", "MONGOCXX"]
+                          "TWOBIT", "SEQSERVER","NJHRINSIDE", "PSTREAMS", "MONGOC", "MONGOCXX", "SHAREDMUTEX"]
         neededLibraries = {}
         for lib in neededLibs:
             if ":" in lib:
@@ -26,8 +26,8 @@ class genHelper:
             f.write("CC = {CC}\n".format(CC = cc))
             f.write("CXX = {CXX}\n".format(CXX = cxx))
             f.write("CXXOUTNAME = {NAME_OF_PROGRAM}\n".format(NAME_OF_PROGRAM = outName))
-            f.write("CXXFLAGS = -std=c++11\n")
-            #f.write("CXXFLAGS = -std=c++14\n")
+            #f.write("CXXFLAGS = -std=c++11\n")
+            f.write("CXXFLAGS = -std=c++14\n")
             f.write("CXXFLAGS += -Wall -ftemplate-depth=1024\n")
             f.write("CXXOPT += -O2 -funroll-loops -DNDEBUG  \n")
             f.write("ifneq ($(shell uname -s),Darwin)\n")
