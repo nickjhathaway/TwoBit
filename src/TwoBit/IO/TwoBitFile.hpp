@@ -17,8 +17,8 @@
 // see http://genome.ucsc.edu/FAQ/FAQformat#format7
 #pragma once
 
-#include "TwoBitSequenceMeta.hpp"
-#include "Exception.hpp"
+#include "TwoBit/objects/TwoBitSequenceMeta.hpp"
+#include "TwoBit/err/Exception.hpp"
 
 #include <string>
 #include <fstream>
@@ -30,6 +30,9 @@ namespace TwoBit
 class TwoBitSequenceMeta;
 class TwoBitSequence;
 
+/**@brief Class for reading from the TwoBit format
+ *
+ */
 class TwoBitFile
 {
 private:
@@ -50,9 +53,10 @@ private:
 	std::unordered_map<std::string, TwoBitSequenceMeta> sequences_;
 	std::vector<std::string> sequenceNames_;
 
-	// util
-
-	// read a uint32_t from file handle and swap bytes if required.
+	/**@brief read a uint32_t from file handle and swap bytes if required
+	 *
+	 * @return the uint32_t read from file_
+	 */
 	inline const uint32_t nextInt()
 	{
 		union aligned
@@ -71,25 +75,32 @@ private:
 				return in.uint;
 			}
 		} else {
-			throw Exception("Error reading file.");
+			throw Exception(__PRETTY_FUNCTION__, "Error reading file.");
 		}
 	}
 
-	// read one char from file handle
+	/**@brief read one char from file handle
+	 *
+	 * @return read a char read from file_
+	 */
 	inline const unsigned char nextChar()
 	{
 		char out;
 		if (file_.read(&out, 1)) {
 			return out;
 		} else {
-			throw Exception("Error reading file.");
+			throw Exception(__PRETTY_FUNCTION__, "Error reading file.");
 		}
 	}
 
-	// read 16 header bytes from file.
+	/**@brief read 16 header bytes from file
+	 *
+	 */
 	void readTwoBitHeader();
 
-	// create sequences from file
+	/**@brief create sequences from file
+	 *
+	 */
 	void createSequenceMeta();
 	void populateSequenceMeta(TwoBitSequenceMeta& meta);
 	void readRegions(std::vector<TwoBitSequenceMeta::Region>& out);
@@ -100,10 +111,33 @@ public:
 	TwoBitFile() = delete;
 	TwoBitFile& operator=(const TwoBitFile& other) = delete;
 
+	/**@brief Construct with filename
+	 *
+	 * @param filename The twobit file name
+	 */
 	TwoBitFile(const std::string& filename);
+	/**@brief operator to get the sequence for seq name
+	 *
+	 * @param s the sequence name
+	 * @return the sequence for seq name
+	 */
 	TwoBitSequence operator[](const std::string& s) const;
+	/**@brief Get the seq names stored in
+	 *
+	 * @return The sequences names
+	 */
 	const std::vector<std::string>& sequenceNames() const;
+	/**@brief Get the number of sequences
+	 *
+	 * @return the number of sequences
+	 */
 	const uint32_t size() const;
+
+	/**@brief Get the filename of the twobit file
+	 *
+	 * @return the filename of the twobit file
+	 */
+	std::string getFilename() const;
 
 };
 

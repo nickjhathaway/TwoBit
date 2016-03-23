@@ -35,17 +35,20 @@ class TwoBitSequence
 {
 private:
 
-	static const uint32_t BUFFER_SIZE = 0x80000; //512k
+	static const uint32_t BUFFER_SIZE = 0x80000; /**< 512k*/
 
-	std::ifstream file_;
-	const TwoBitSequenceMeta& meta_;
-	char buffer_[BUFFER_SIZE];
+	std::ifstream file_; /**< File handle to the twobit file */
+	const TwoBitSequenceMeta& meta_; /**< class to store actually twobit info*/
+	char buffer_[BUFFER_SIZE]; /**< char buffer to hold sequence data while reading */
 
 	friend class TwoBitFile;
 
 	// make it "printable"
 	friend std::ostream& ::operator<<(std::ostream& s, const TwoBitSequence& x);
-
+	/**@brief construct with meta data
+	 *
+	 * @param meta The twobit stored in file for this sequence
+	 */
 	TwoBitSequence(const TwoBitSequenceMeta& meta) :
 			meta_(meta)
 	{
@@ -68,7 +71,16 @@ public:
 	TwoBitSequence() = delete;
 	TwoBitSequence& operator=(const TwoBitSequence& other) = delete;
 
-	// get sequence, from start to end, optionally in reverse-complement
+
+	/**@brief get sequence, from start to end, optionally in reverse-complement
+	 *
+	 * @param buffer The string to store the sequence in
+	 * @param start The starting sequence
+	 * @param end The end position, not inclusive
+	 * @param reverseComplement Whether to reverse complement the sequence
+	 * @param doMask Whehter to appply the mask information stored in the two bit file
+	 * @return A reference to the buffer passed in as well
+	 */
 	std::string& getSequence(std::string& buffer, const uint32_t& start = 0,
 			const uint32_t& end = 0, const bool reverseComplement = false,
 			const bool doMask = true);
@@ -99,14 +111,26 @@ public:
 	{
 		return meta_.nRegions;
 	}
+	/**@brief get file offset
+	 *
+	 * @return
+	 */
 	uint32_t getOffset() const
 	{
 		return meta_.offset_;
 	}
+	/**@brief Get the packedPos in the file
+	 *
+	 * @return the packed pos in met_
+	 */
 	uint32_t getPackedPos() const
 	{
 		return meta_.packedPos_;
 	}
+	/**@brief Determine if bits are swapped
+	 *
+	 * @return bool if bits are swapped
+	 */
 	bool isSwapped() const
 	{
 		return meta_.swapped_;

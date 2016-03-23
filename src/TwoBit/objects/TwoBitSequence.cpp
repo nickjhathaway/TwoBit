@@ -15,7 +15,7 @@
  */
 
 #include "TwoBitSequence.hpp"
-#include "Exception.hpp"
+#include "TwoBit/err/Exception.hpp"
 
 #include <vector>
 
@@ -72,7 +72,7 @@ std::string& TwoBitSequence::getSequence(std::string& buffer,
 		filePos += BUFFER_SIZE;
 
 		if (!file_) {
-			throw Exception("I/O error.");
+			throw Exception(__PRETTY_FUNCTION__,  "I/O error.");
 		}
 
 		// obtain sequence.
@@ -126,7 +126,7 @@ std::string& TwoBitSequence::getSequence(std::string& buffer,
 						}
 					} else {
 						// negative values for m or n means something's not quite right.
-						throw Exception("Error parsing regions.");
+						throw Exception(__PRETTY_FUNCTION__, "Error parsing regions.");
 					}
 				}
 				++seqPos;

@@ -22,27 +22,32 @@
 namespace TwoBit
 {
 
-// General exception.
-class Exception: public std::exception
-{
+/**@brief General exception
+ *
+ */
+class Exception: public std::exception {
 protected:
-	const std::string what_;	// error message
+	const std::string what_;	/**< error message*/
 public:
-	Exception(const std::string s) :
-			what_(s)
-	{
+	/**@brief Construct with a function name and an error message
+	 *
+	 * @param funcName The function name, normally given by __PRETTY_FUNCTION__
+	 * @param s An error message
+	 */
+	Exception(const std::string & funcName, const std::string & s);
+	/**@brief Construct with an error message
+	 *
+	 * @param s
+	 */
+	Exception(const std::string & s);
+
+	virtual ~Exception() {
 	}
-	Exception() :
-			what_("Exception!")
-	{
-	}
-	virtual ~Exception()
-	{
-	}
-	virtual const char* what() const throw ()
-	{
-		return what_.c_str();
-	}
+	/**@brief Report error message
+	 *
+	 * @return The error message
+	 */
+	virtual const char* what() const throw ();
 };
 
 } // namespace TwoBit

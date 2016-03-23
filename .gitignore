@@ -39,3 +39,7 @@ TAGS
 /.project
 /.settings
 
+/docs/man/*
+/build/*
+
+compfile.mk

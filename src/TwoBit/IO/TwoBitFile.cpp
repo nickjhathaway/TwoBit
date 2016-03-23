@@ -15,7 +15,7 @@
  */
 
 #include "TwoBitFile.hpp"
-#include "TwoBitSequence.hpp"
+#include "TwoBit/objects/TwoBitSequence.hpp"
 
 #include <algorithm>
 
@@ -50,10 +50,10 @@ void TwoBitFile::readTwoBitHeader()
 		} else if (magic_ == REVERSE_MAGIC_NUMBER) {
 			swapped_ = true;
 		} else {
-			throw Exception("Invalid magic number. Bad 2-bit file.");
+			throw Exception(__PRETTY_FUNCTION__, "Invalid magic number. Bad 2-bit file.");
 		}
 	} else {
-		throw Exception("Error reading file.");
+		throw Exception(__PRETTY_FUNCTION__, "Error reading file.");
 	}
 
 	version_ = nextInt();		// always zero
@@ -62,10 +62,10 @@ void TwoBitFile::readTwoBitHeader()
 
 	// integrity check
 	if (VERSION != version_) {
-		throw Exception("Unexpected version number. Bad 2-bit file.");
+		throw Exception(__PRETTY_FUNCTION__, "Unexpected version number. Bad 2-bit file.");
 	}
 	if (RESERVED != reserved_) {
-		throw Exception("Unexpected data. Bad 2-bit file.");
+		throw Exception(__PRETTY_FUNCTION__, "Unexpected data. Bad 2-bit file.");
 	}
 }
 
@@ -104,7 +104,7 @@ void TwoBitFile::populateSequenceMeta(TwoBitSequenceMeta& meta)
 
 	// check. this number should be zero as per the spec.
 	if (0 != nextInt()) {
-		throw Exception("Unexpected data. Bad 2-bit file.");
+		throw Exception(__PRETTY_FUNCTION__, "Unexpected data. Bad 2-bit file.");
 	}
 
 	// store start of packed data
@@ -150,7 +150,7 @@ TwoBitSequence TwoBitFile::operator[](const std::string& s) const
 	if (iter != sequences_.end()) {
 		return (TwoBitSequence(iter->second));
 	} else {
-		throw Exception("Unknown sequence '" + s + "'.");
+		throw Exception(__PRETTY_FUNCTION__, "Unknown sequence '" + s + "'.");
 	}
 }
 
@@ -162,6 +162,10 @@ const std::vector<std::string>& TwoBitFile::sequenceNames() const
 const uint32_t TwoBitFile::size() const
 {
 	return sequences_.size();
+}
+
+std::string TwoBitFile::getFilename() const{
+	return filename_;
 }
 
 } // namespace TwoBit
