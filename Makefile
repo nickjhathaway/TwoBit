@@ -49,7 +49,7 @@ TESTDIR=test
 ###compiler options, add in environmental 
 CXXFLAGS += $(ENV_CXXFLAGS)
 LD_FLAGS += $(ENV_LDFLAGS)
-#CXXFLAGS += -Wno-missing-braces
+CXXFLAGS += -Wno-missing-braces
 COMMON = $(CXXFLAGS) $(CXXOPT) $(COMLIBS)
 -include do_preReqs
 
