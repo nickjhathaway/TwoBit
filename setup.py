@@ -468,7 +468,7 @@ class Packages():
         name = "cppprogutils"
         buildCmd = ""
         pack = CPPLibPackage(name, buildCmd, self.dirMaster_, "git-headeronly", "v2.0.0")
-        pack.bibProject_ = True
+        #pack.bibProject_ = True
         pack.addHeaderOnlyVersion(url, "develop")
         pack.versions_["develop"].additionalLdFlags_ = ["-lpthread"]
         pack.versions_["develop"].includePath_ = os.path.join(name, "develop", name)
