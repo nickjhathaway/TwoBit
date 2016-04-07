@@ -1,4 +1,4 @@
-# 2-bit reader
+# 2-bit reader/writer
 Version 2.0.2
 
 
@@ -14,7 +14,7 @@ git clone https://github.com/weng-lab/TwoBit.git
 cd TwoBit
 git checkout -b develop origin/develop #switch to develop branch
 #configure, compiler can be set or environmental CC and CXX will be used
-CC=clang-3.5 CXX=clang++-3.5 ./configure.py 
+CC=clang-3.6 CXX=clang++-3.6 ./configure.py 
 #download cppitertools, cppprogutils
 ./setup.py --compfile compfile.mk --outMakefile makefile-common.mk #compfile.mk created by configure
 #compile
