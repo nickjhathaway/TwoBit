@@ -2,8 +2,8 @@
 
 #include "TwoBitOut.hpp"
 #include <sstream>
-#include <string.h>
-#include <stdint.h>
+#include <string>
+#include <cstdint>
 #include <limits>
 
 
