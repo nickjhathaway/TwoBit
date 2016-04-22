@@ -7,7 +7,7 @@
  */
 
 #include <array>
-#include <stdint.h>
+#include <cstdint>
 
 namespace TwoBit {
 

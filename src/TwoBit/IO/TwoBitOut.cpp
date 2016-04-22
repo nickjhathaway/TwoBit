@@ -3,7 +3,7 @@
 #include "TwoBitOut.hpp"
 #include <sstream>
 #include <string.h>
-#include <stdint.h>
+#include <cstdint>
 #include <limits>
 
 
