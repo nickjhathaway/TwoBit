@@ -8,6 +8,6 @@
 
 
 
-#include "TwoBit/programs/TwoBitProgram.h"
+#include "TwoBitPrograms/TwoBitProgram.h"
 
 

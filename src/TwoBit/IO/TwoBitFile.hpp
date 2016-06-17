@@ -106,8 +106,13 @@ private:
 	void readRegions(std::vector<TwoBitSequenceMeta::Region>& out);
 
 public:
-	// no-copy
-	TwoBitFile(const TwoBitFile& other) = delete;
+
+	/**@brief copy construct by simply get the filename from the other reader and constructing
+	 *
+	 * @param other
+	 */
+	TwoBitFile(const TwoBitFile& other);
+	//delete some stuff
 	TwoBitFile() = delete;
 	TwoBitFile& operator=(const TwoBitFile& other) = delete;
 
