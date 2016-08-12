@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#include "TwoBit.h"
+#include "TwoBitPrograms.h"
 
 #include <iostream>
 #include <exception>

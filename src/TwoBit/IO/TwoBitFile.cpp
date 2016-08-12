@@ -40,6 +40,8 @@ TwoBitFile::TwoBitFile(const std::string& filename) :
 	file_.close();
 }
 
+TwoBitFile::TwoBitFile(const TwoBitFile& other) : TwoBitFile(other.getFilename()){}
+
 void TwoBitFile::readTwoBitHeader()
 {
 	// Read first 16 bytes of 2-bit file to get things going
