@@ -20,27 +20,27 @@
 #include <iostream>
 #include <exception>
 
-int main(int argc, char** argv)
-{
-	try {
-		// TODO: it would be convenient and efficient to have TwoBitSequence be an input stream.
+int main() {
+    try {
+        // TODO: it would be convenient and efficient to have TwoBitSequence be
+        // an input stream.
 
-		TwoBit::TwoBitFile f("/home/vanderva/.ucscgenome/hg19.2bit");
-		std::string buffer;
-		for (const std::string& s : f.sequenceNames()) {
-			f[s].getSequence(buffer);
-			std::cout << ">" << s << std::endl;
-			for (uint32_t i = 0; i < buffer.size(); i += 80) {
-				std::cout << buffer.substr(i, 80) << '\n';
-			}
-			std::cout.flush();
-		}
+        TwoBit::TwoBitFile f("/home/vanderva/.ucscgenome/hg19.2bit");
+        std::string buffer;
+        for (const std::string& s : f.sequenceNames()) {
+            f[s].getSequence(buffer);
+            std::cout << ">" << s << std::endl;
+            for (uint32_t i = 0; i < buffer.size(); i += 80) {
+                std::cout << buffer.substr(i, 80) << '\n';
+            }
+            std::cout.flush();
+        }
 
-	} catch (std::exception& e) {
-		std::cerr << "Error: " << e.what() << std::endl;
-		return 1;
-	}
+    } catch (std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
+    }
 
-	return 0;
+    return 0;
 }
 
