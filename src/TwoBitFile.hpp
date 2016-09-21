@@ -53,7 +53,7 @@ private:
 	// util
 
 	// read a uint32_t from file handle and swap bytes if required.
-	inline const uint32_t nextInt()
+	inline uint32_t nextInt()
 	{
 		union aligned
 		{
@@ -76,7 +76,7 @@ private:
 	}
 
 	// read one char from file handle
-	inline const unsigned char nextChar()
+	inline unsigned char nextChar()
 	{
 		char out;
 		if (file_.read(&out, 1)) {
@@ -103,7 +103,7 @@ public:
 	TwoBitFile(const std::string& filename);
 	TwoBitSequence operator[](const std::string& s) const;
 	const std::vector<std::string>& sequenceNames() const;
-	const uint32_t size() const;
+	uint32_t size() const;
 
 };
 

@@ -159,7 +159,7 @@ const std::vector<std::string>& TwoBitFile::sequenceNames() const
 	return sequenceNames_;
 }
 
-const uint32_t TwoBitFile::size() const
+uint32_t TwoBitFile::size() const
 {
 	return sequences_.size();
 }
