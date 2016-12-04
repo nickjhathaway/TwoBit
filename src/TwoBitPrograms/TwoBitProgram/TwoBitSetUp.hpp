@@ -1,12 +1,12 @@
 #pragma once
 
-#include <cppprogutils/programSetUp.hpp>
+#include <bibcpp.h>
 
 namespace TwoBit {
 
-class TwoBitSetUp : public cppprogutils::programSetUp {
+class TwoBitSetUp : public bib::progutils::programSetUp {
 
  public:
-    using cppprogutils::programSetUp::programSetUp;
+    using bib::progutils::programSetUp::programSetUp;
 };
 } // namespace TwoBit

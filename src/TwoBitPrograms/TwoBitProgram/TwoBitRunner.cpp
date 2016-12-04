@@ -10,12 +10,12 @@
 namespace TwoBit {
 
 TwoBitRunner::TwoBitRunner()
-    : cppprogutils::programRunner({
+    : bib::progutils::programRunner ({
 	addFunc("twoBitToFa", twoBitToFa, false),
   addFunc("faToTwoBit", faToTwoBit, false)},
-                    "TwoBit") {}
-                    
-int TwoBitRunner::twoBitToFa(std::map<std::string, std::string> inputCommands){
+                    "TwoBit",  "3", "0", "0-dev") {}
+
+int TwoBitRunner::twoBitToFa(const bib::progutils::CmdArgs & inputCommands){
 	TwoBitSetUp setUp(inputCommands);
 	std::string inputFilename = "";
 	uint32_t width = 80;
@@ -30,7 +30,7 @@ int TwoBitRunner::twoBitToFa(std::map<std::string, std::string> inputCommands){
 		TwoBitFile f(inputFilename);
 		std::string buffer;
 		std::ofstream outfile;
-		std::ostream out(cppprogutils::determineOutBuf(outfile,outFilename, ".fasta", overWrite, false, true));
+		std::ostream out(bib::files::determineOutBuf(outfile,outFilename, ".fasta", overWrite, false, true));
 		for (const std::string& s : f.sequenceNames()) {
 			f[s].getSequence(buffer);
 			out << ">" << s << std::endl;
@@ -46,7 +46,7 @@ int TwoBitRunner::twoBitToFa(std::map<std::string, std::string> inputCommands){
 }
 
 
-int TwoBitRunner::faToTwoBit(std::map<std::string, std::string> inputCommands) {
+int TwoBitRunner::faToTwoBit(const bib::progutils::CmdArgs & inputCommands) {
 	TwoBitSetUp setUp(inputCommands);
 	std::string inputFilename = "";
 	std::string outFilename = "";
@@ -62,17 +62,17 @@ int TwoBitRunner::faToTwoBit(std::map<std::string, std::string> inputCommands) {
 	setUp.setOption(leaveWhitespaceInName, "--leaveWhitespaceInName",
 				"Whether to trim the names of the fasta records at the first whitespace");
 	setUp.finishSetUp(std::cout);
-	cppprogutils::appendAsNeeded(outFilename, ".2bit");
+	bib::appendAsNeeded(outFilename, ".2bit");
 	std::ofstream out;
 	//check if output file exists
-	if (!overWrite && cppprogutils::fexists(outFilename)) {
+	if (!overWrite && bib::files::bfs::exists(outFilename)) {
 		throw Exception(__PRETTY_FUNCTION__,
 				"File " + outFilename
 						+ " already exists, use --overWrite to over write");
 	}
 	//read in seqs
 	std::vector<std::unique_ptr<FastaRecord>> seqs;
-	auto toks = cppprogutils::tokenizeString(inputFilename, ",");
+	auto toks = bib::tokenizeString(inputFilename, ",");
 	for(const auto & fName : toks){
 		std::ifstream in(fName);
 		std::unique_ptr<FastaRecord> seq;
