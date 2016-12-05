@@ -57,8 +57,6 @@ int TwoBitRunner::faToTwoBit(const bib::progutils::CmdArgs & inputCommands) {
 			"Name of an output file", true);
 	setUp.setOption(overWrite, "--overWrite",
 			"Whether to overwrite the file if one is given by --out");
-	setUp.setOption(overWrite, "--overWrite",
-			"Whether to overwrite the file if one is given by --out");
 	setUp.setOption(leaveWhitespaceInName, "--leaveWhitespaceInName",
 				"Whether to trim the names of the fasta records at the first whitespace");
 	setUp.finishSetUp(std::cout);
