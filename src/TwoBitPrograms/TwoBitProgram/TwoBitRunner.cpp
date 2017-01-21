@@ -12,8 +12,24 @@ namespace TwoBit {
 TwoBitRunner::TwoBitRunner()
     : bib::progutils::programRunner ({
 	addFunc("twoBitToFa", twoBitToFa, false),
-  addFunc("faToTwoBit", faToTwoBit, false)},
+  addFunc("faToTwoBit", faToTwoBit, false),
+	addFunc("getTwobitNames", getTwobitNames, false)},
                     "TwoBit",  "3", "0", "0-dev") {}
+
+
+int TwoBitRunner::getTwobitNames(const bib::progutils::CmdArgs & inputCommands){
+	std::string inputFilename = "";
+	TwoBitSetUp setUp(inputCommands);
+
+	setUp.setOption(inputFilename, "--in,-i", "Input 2bit filename",true );
+	setUp.finishSetUp(std::cout);
+	TwoBitFile f(inputFilename);
+	auto names  = f.sequenceNames();
+	for(const auto & name : names){
+		std::cout << name << std::endl;
+	}
+	return 0;
+}
 
 int TwoBitRunner::twoBitToFa(const bib::progutils::CmdArgs & inputCommands){
 	TwoBitSetUp setUp(inputCommands);

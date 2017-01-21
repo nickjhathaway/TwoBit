@@ -9,6 +9,7 @@ class TwoBitRunner : public bib::progutils::programRunner {
   TwoBitRunner();
   
   static int twoBitToFa(const bib::progutils::CmdArgs & inputCommands);
+  static int getTwobitNames(const bib::progutils::CmdArgs & inputCommands);
   static int faToTwoBit(const bib::progutils::CmdArgs & inputCommands);
 
 };
