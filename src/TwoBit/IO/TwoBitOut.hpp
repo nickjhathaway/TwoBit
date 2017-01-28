@@ -8,6 +8,7 @@
 
 
 #include "TwoBit/objects/FastaRecord.hpp"
+#include "TwoBit/pars/faToTwoBitPars.hpp"
 #include <memory>
 
 namespace TwoBit {
@@ -19,6 +20,13 @@ namespace TwoBit {
  * @param out The file to write to
  */
 void twoBitWriteHeader(const std::vector<std::unique_ptr<FastaRecord>> & seqs, std::ofstream & out);
+
+/**@brief Write fasta files to output 2bit file
+ *
+ * @param pars Parameters to use, contains input name and output name
+ */
+void fastasToTwoBit(const faToTwoBitPars & pars);
+
 
 }  // namespace TwoBit
 

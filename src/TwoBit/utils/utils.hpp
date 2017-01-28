@@ -11,9 +11,12 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <boost/filesystem.hpp>
 #include "TwoBit/constants.h"
 
 namespace TwoBit{
+
+namespace bfs = boost::filesystem;
 
 #if (defined(__clang__) && __cplusplus < 201305L) || ((defined(__GNUC__) || defined(__GNUG__)) && __cplusplus < 201300L)
 // forward declare until using c++14

@@ -5,7 +5,9 @@
 #include <string.h>
 #include <cstdint>
 #include <limits>
-
+#include <bibcpp.h>
+#include "TwoBit/err/Exception.hpp"
+#include "TwoBit/IO/fasta.hpp"
 
 namespace TwoBit {
 
@@ -48,6 +50,41 @@ void twoBitWriteHeader(const std::vector<std::unique_ptr<FastaRecord>> & seqs, s
 					"please split up into smaller files.\n";
 			throw std::runtime_error{ss.str()};
 		}
+	}
+}
+
+void fastasToTwoBit(const faToTwoBitPars & pars){
+	std::string outName = bib::appendAsNeededRet(pars.outFilename, ".2bit");
+
+	std::ofstream out;
+	//check if output file exists
+	if (!pars.overWrite && bfs::exists(outName)) {
+		throw Exception(__PRETTY_FUNCTION__,
+				"File " + outName
+						+ " already exists, use --overWrite to over write");
+	}
+	//read in seqs
+	//input file name can be multiple files to combine into one 2bit, should be comma separated
+	std::vector<std::unique_ptr<FastaRecord>> seqs;
+	auto toks = bib::tokenizeString(pars.inputFilename, ",");
+	for(const auto & fName : toks){
+		if(!bfs::exists(fName)){
+			std::stringstream ss;
+			ss << __PRETTY_FUNCTION__ << ", Error input file name " << fName << " doesn't exist" << std::endl;
+			throw std::runtime_error{ss.str()};
+		}
+		std::ifstream in(fName);
+		std::unique_ptr<FastaRecord> seq;
+		while (readNextFasta(in, seq, !pars.leaveWhitespaceInName)) {
+			seqs.emplace_back(std::move(seq));
+		}
+	}
+	out.open(outName, std::ios::binary | std::ios::out);
+	//write out header
+	twoBitWriteHeader(seqs, out);
+	//write out sequences
+	for (const auto & seq : seqs) {
+		seq->twoBitWriteOne(out);
 	}
 }
 

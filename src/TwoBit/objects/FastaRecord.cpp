@@ -5,18 +5,19 @@
 namespace TwoBit {
 
 
-std::vector<unsigned char> FastaRecord::data()const{
+std::vector<unsigned char> FastaRecord::data() const {
 	std::vector<unsigned char> ret;
-	ret.reserve(seq_.size()/4);
+	ret.reserve(seq_.size() / 4);
 	uint32_t i;
-	for(i = 0; i < seq_.size() - 4; i += 4){
+	for (i = 0; i < seq_.size() - 4; i += 4) {
 		ret.push_back(packDna4(seq_, i));
 	}
-	std::string last('T',4);
-	for(uint32_t j = 0; i < seq_.size(); ++j, ++i){
+	//T is the default
+	std::string last('T', 4);
+	for (uint32_t j = 0; i < seq_.size(); ++j, ++i) {
 		last[j] = seq_[i];
 	}
-	ret.push_back(packDna4(last,0));
+	ret.push_back(packDna4(last, 0));
 	return ret;
 }
 
