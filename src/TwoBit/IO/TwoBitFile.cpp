@@ -22,11 +22,11 @@
 namespace TwoBit
 {
 
-TwoBitFile::TwoBitFile(const std::string& filename) :
+TwoBitFile::TwoBitFile(const bfs::path& filename) :
 		swapped_(false), magic_(0), version_(0), sequenceCount_(0), reserved_(
 				0), filename_(filename)
 {
-	file_.open(filename_, std::ios::in | std::ios::binary);
+	file_.open(filename_.string(), std::ios::in | std::ios::binary);
 	try {
 		readTwoBitHeader();
 		createSequenceMeta();
@@ -87,7 +87,7 @@ void TwoBitFile::createSequenceMeta()
 
 		// add meta data.
 		sequences_.emplace(seqNameStr,
-				TwoBitSequenceMeta(seqNameStr, offset, filename_, swapped_));
+				TwoBitSequenceMeta(seqNameStr, offset, filename_.string(), swapped_));
 		sequenceNames_.push_back(seqNameStr);
 	}
 }
@@ -166,7 +166,7 @@ const uint32_t TwoBitFile::size() const
 	return sequences_.size();
 }
 
-std::string TwoBitFile::getFilename() const{
+bfs::path TwoBitFile::getFilename() const{
 	return filename_;
 }
 

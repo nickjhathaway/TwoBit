@@ -19,13 +19,14 @@
 
 #include "TwoBit/objects/TwoBitSequenceMeta.hpp"
 #include "TwoBit/err/Exception.hpp"
-
+#include <boost/filesystem.hpp>
 #include <string>
 #include <fstream>
 #include <unordered_map>
 
 namespace TwoBit
 {
+namespace bfs = boost::filesystem;
 
 class TwoBitSequenceMeta;
 class TwoBitSequence;
@@ -48,7 +49,7 @@ private:
 	uint32_t version_;
 	uint32_t sequenceCount_;
 	uint32_t reserved_;
-	std::string filename_;
+	bfs::path filename_;
 	std::ifstream file_;
 	std::unordered_map<std::string, TwoBitSequenceMeta> sequences_;
 	std::vector<std::string> sequenceNames_;
@@ -120,7 +121,7 @@ public:
 	 *
 	 * @param filename The twobit file name
 	 */
-	TwoBitFile(const std::string& filename);
+	TwoBitFile(const bfs::path& filename);
 	/**@brief operator to get the sequence for seq name
 	 *
 	 * @param s the sequence name
@@ -142,7 +143,7 @@ public:
 	 *
 	 * @return the filename of the twobit file
 	 */
-	std::string getFilename() const;
+	bfs::path getFilename() const;
 
 };
 
