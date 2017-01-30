@@ -146,11 +146,11 @@ void TwoBitFile::readRegions(std::vector<TwoBitSequenceMeta::Region>& out)
 			});
 }
 
-TwoBitSequence TwoBitFile::operator[](const std::string& s) const
+std::unique_ptr<TwoBitSequence> TwoBitFile::operator[](const std::string& s) const
 {
 	auto iter = sequences_.find(s);
-	if (iter != sequences_.end()) {
-		return (TwoBitSequence(iter->second));
+	if (sequences_.end() != iter) {
+		return std::make_unique<TwoBitSequence>(iter->second);
 	} else {
 		throw Exception(__PRETTY_FUNCTION__, "Unknown sequence '" + s + "'.");
 	}

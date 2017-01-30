@@ -127,7 +127,7 @@ public:
 	 * @param s the sequence name
 	 * @return the sequence for seq name
 	 */
-	TwoBitSequence operator[](const std::string& s) const;
+	std::unique_ptr<TwoBitSequence> operator[](const std::string& s) const;
 	/**@brief Get the seq names stored in
 	 *
 	 * @return The sequences names

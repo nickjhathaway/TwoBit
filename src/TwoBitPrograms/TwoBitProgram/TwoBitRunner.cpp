@@ -49,7 +49,7 @@ int TwoBitRunner::twoBitToFa(const bib::progutils::CmdArgs & inputCommands){
 		std::ofstream outfile;
 		std::ostream out(bib::files::determineOutBuf(outfile,outFilename, ".fasta", overWrite, false, true));
 		for (const std::string& s : f.sequenceNames()) {
-			f[s].getSequence(buffer);
+			f[s]->getSequence(buffer);
 			out << ">" << s << std::endl;
 			for (uint32_t i = 0; i < buffer.size(); i += width) {
 				out << buffer.substr(i, width) << '\n';
