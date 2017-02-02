@@ -122,17 +122,26 @@ public:
 	 * @param filename The twobit file name
 	 */
 	TwoBitFile(const bfs::path& filename);
+
 	/**@brief operator to get the sequence for seq name
 	 *
 	 * @param s the sequence name
 	 * @return the sequence for seq name
 	 */
 	std::unique_ptr<TwoBitSequence> operator[](const std::string& s) const;
+
 	/**@brief Get the seq names stored in
 	 *
 	 * @return The sequences names
 	 */
 	const std::vector<std::string>& sequenceNames() const;
+
+	/**@brief Get a map of seq name to seq length
+	 *
+	 * @return a map of seq name to seq length
+	 */
+	std::unordered_map<std::string, uint32_t> getSeqLens() const;
+
 	/**@brief Get the number of sequences
 	 *
 	 * @return the number of sequences

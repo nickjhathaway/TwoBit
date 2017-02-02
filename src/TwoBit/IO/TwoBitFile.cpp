@@ -161,6 +161,14 @@ const std::vector<std::string>& TwoBitFile::sequenceNames() const
 	return sequenceNames_;
 }
 
+std::unordered_map<std::string, uint32_t> TwoBitFile::getSeqLens() const{
+	std::unordered_map<std::string, uint32_t> ret;
+	for(const auto & meta : sequences_){
+		ret[meta.first] = meta.second.dnaSize_;
+	}
+	return ret;
+}
+
 const uint32_t TwoBitFile::size() const
 {
 	return sequences_.size();
