@@ -75,9 +75,17 @@ void fastasToTwoBit(const faToTwoBitPars & pars){
 		}
 		std::ifstream in(fName);
 		std::unique_ptr<FastaRecord> seq;
-		while (readNextFasta(in, seq, !pars.leaveWhitespaceInName)) {
-			seqs.emplace_back(std::move(seq));
+		try {
+			while (readNextFasta(in, seq, !pars.leaveWhitespaceInName)) {
+				seqs.emplace_back(std::move(seq));
+			}
+		} catch (std::exception & e) {
+			std::stringstream ss;
+			ss << __PRETTY_FUNCTION__ << ", Error in reading input from " << fName << std::endl;
+			ss << e.what() << std::endl;
+			throw std::runtime_error{ss.str()};
 		}
+
 	}
 	out.open(outName, std::ios::binary | std::ios::out);
 	//write out header
