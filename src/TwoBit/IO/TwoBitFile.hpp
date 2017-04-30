@@ -136,6 +136,13 @@ public:
 	 */
 	const std::vector<std::string>& sequenceNames() const;
 
+	/**@brief Return if sequence name is in file
+	 *
+	 * @param seqName the sequence name
+	 * @return true if seq name is in file
+	 */
+	bool hasSequenceName(const std::string & seqName) const;
+
 	/**@brief Get a map of seq name to seq length
 	 *
 	 * @return a map of seq name to seq length

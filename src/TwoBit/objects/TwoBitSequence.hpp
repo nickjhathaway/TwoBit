@@ -78,7 +78,7 @@ public:
 	 * @param start The starting sequence
 	 * @param end The end position, not inclusive
 	 * @param reverseComplement Whether to reverse complement the sequence
-	 * @param doMask Whehter to appply the mask information stored in the two bit file
+	 * @param doMask Whether to apply the mask information stored in the two bit file
 	 * @return A reference to the buffer passed in as well
 	 */
 	std::string& getSequence(std::string& buffer, const uint32_t& start = 0,

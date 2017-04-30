@@ -17,6 +17,7 @@
 #include "TwoBitFile.hpp"
 #include "TwoBit/objects/TwoBitSequence.hpp"
 
+#include <bibcpp/utils/utils.hpp>
 #include <algorithm>
 
 namespace TwoBit
@@ -159,6 +160,10 @@ std::unique_ptr<TwoBitSequence> TwoBitFile::operator[](const std::string& s) con
 const std::vector<std::string>& TwoBitFile::sequenceNames() const
 {
 	return sequenceNames_;
+}
+
+bool TwoBitFile::hasSequenceName(const std::string & seqName) const{
+	return bib::in(seqName, sequenceNames_);
 }
 
 std::unordered_map<std::string, uint32_t> TwoBitFile::getSeqLens() const{
