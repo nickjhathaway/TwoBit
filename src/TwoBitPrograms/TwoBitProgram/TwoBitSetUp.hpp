@@ -4,9 +4,9 @@
 
 namespace TwoBit {
 
-class TwoBitSetUp : public bib::progutils::programSetUp {
+class TwoBitSetUp : public bib::progutils::ProgramSetUp {
 
  public:
-    using bib::progutils::programSetUp::programSetUp;
+    using bib::progutils::ProgramSetUp::ProgramSetUp;
 };
 } // namespace TwoBit

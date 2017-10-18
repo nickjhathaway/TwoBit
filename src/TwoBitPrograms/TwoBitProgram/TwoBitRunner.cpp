@@ -11,7 +11,7 @@
 namespace TwoBit {
 
 TwoBitRunner::TwoBitRunner()
-    : bib::progutils::programRunner ({
+    : bib::progutils::ProgramRunner ({
 	addFunc("twoBitToFa", twoBitToFa, false),
   addFunc("faToTwoBit", faToTwoBit, false),
 	addFunc("getTwobitNames", getTwobitNames, false)},

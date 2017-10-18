@@ -4,7 +4,7 @@
 
 namespace TwoBit {
 
-class TwoBitRunner : public bib::progutils::programRunner {
+class TwoBitRunner : public bib::progutils::ProgramRunner {
  public:
   TwoBitRunner();
   
