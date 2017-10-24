@@ -14,6 +14,7 @@ def parse_args():
     parser.add_argument('-CXX', type=str, nargs = 1)
     parser.add_argument('-libs', type=str)
     parser.add_argument('-ldFlags', type=str)
+    parser.add_argument('-cxxFlags', type=str)
     parser.add_argument('-name', type=str, required = True)
     return parser.parse_args()
 
@@ -25,7 +26,7 @@ def main():
     CXX = genHelper.determineCXX(args)
     if(args.externalLibDir):
         external = args.externalLibDir;
-    cmd = """scripts/setUpScripts/generateCompFile.py -installName {name}
+    cmd = os.path.join(os.path.dirname(os.path.dirname(__file__)), "setUpScripts/generateCompFile.py") + """ -installName {name}
      -outFilename compfile.mk -externalLoc {external} -CC {CC} -CXX {CXX}
       -neededLibs {libs} -outname {name}"""
     if args.prefix and args.prefix != "":
@@ -33,6 +34,11 @@ def main():
         cmd += " -prefix {prefix}"
     if args.ldFlags and "" != args.ldFlags:
         cmd += " -ldFlags " + args.ldFlags
+    if args.cxxFlags and "" != args.cxxFlags:
+        addingFlags = " -cxxFlags \""
+        if args.cxxFlags.startswith("-"):
+            addingFlags += "\\"
+        cmd += addingFlags + args.cxxFlags + "\""
     cmd = " ".join(cmd.split())
     cmd = cmd.format(name = args.name, external = external, CC=CC, CXX=CXX, libs = args.libs, prefix = prefix)
     Utils.run(cmd)

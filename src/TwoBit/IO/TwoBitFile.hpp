@@ -19,13 +19,14 @@
 
 #include "TwoBit/objects/TwoBitSequenceMeta.hpp"
 #include "TwoBit/err/Exception.hpp"
-
+#include <boost/filesystem.hpp>
 #include <string>
 #include <fstream>
 #include <unordered_map>
 
 namespace TwoBit
 {
+namespace bfs = boost::filesystem;
 
 class TwoBitSequenceMeta;
 class TwoBitSequence;
@@ -48,7 +49,7 @@ private:
 	uint32_t version_;
 	uint32_t sequenceCount_;
 	uint32_t reserved_;
-	std::string filename_;
+	bfs::path filename_;
 	std::ifstream file_;
 	std::unordered_map<std::string, TwoBitSequenceMeta> sequences_;
 	std::vector<std::string> sequenceNames_;
@@ -120,18 +121,34 @@ public:
 	 *
 	 * @param filename The twobit file name
 	 */
-	TwoBitFile(const std::string& filename);
+	TwoBitFile(const bfs::path& filename);
+
 	/**@brief operator to get the sequence for seq name
 	 *
 	 * @param s the sequence name
 	 * @return the sequence for seq name
 	 */
-	TwoBitSequence operator[](const std::string& s) const;
+	std::unique_ptr<TwoBitSequence> operator[](const std::string& s) const;
+
 	/**@brief Get the seq names stored in
 	 *
 	 * @return The sequences names
 	 */
 	const std::vector<std::string>& sequenceNames() const;
+
+	/**@brief Return if sequence name is in file
+	 *
+	 * @param seqName the sequence name
+	 * @return true if seq name is in file
+	 */
+	bool hasSequenceName(const std::string & seqName) const;
+
+	/**@brief Get a map of seq name to seq length
+	 *
+	 * @return a map of seq name to seq length
+	 */
+	std::unordered_map<std::string, uint32_t> getSeqLens() const;
+
 	/**@brief Get the number of sequences
 	 *
 	 * @return the number of sequences
@@ -142,7 +159,7 @@ public:
 	 *
 	 * @return the filename of the twobit file
 	 */
-	std::string getFilename() const;
+	bfs::path getFilename() const;
 
 };
 

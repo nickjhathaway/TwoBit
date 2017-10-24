@@ -11,6 +11,7 @@
 #include "TwoBit/utils.h"
 #include "TwoBit/err.h"
 #include "TwoBit/objects.h"
+#include "TwoBit/pars.h"
 #include "TwoBit/IO.h"
 
 

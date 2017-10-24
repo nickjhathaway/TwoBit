@@ -7,15 +7,32 @@
 #include "TwoBit/objects/TwoBitSequence.hpp"
 #include "TwoBit/IO.h"
 #include "TwoBitSetUp.hpp"
+
 namespace TwoBit {
 
 TwoBitRunner::TwoBitRunner()
-    : cppprogutils::programRunner({
+    : bib::progutils::ProgramRunner ({
 	addFunc("twoBitToFa", twoBitToFa, false),
-  addFunc("faToTwoBit", faToTwoBit, false)},
-                    "TwoBit") {}
-                    
-int TwoBitRunner::twoBitToFa(std::map<std::string, std::string> inputCommands){
+  addFunc("faToTwoBit", faToTwoBit, false),
+	addFunc("getTwobitNames", getTwobitNames, false)},
+                    "TwoBit",  "2", "0", "5") {}
+
+
+int TwoBitRunner::getTwobitNames(const bib::progutils::CmdArgs & inputCommands){
+	std::string inputFilename = "";
+	TwoBitSetUp setUp(inputCommands);
+
+	setUp.setOption(inputFilename, "--in,-i", "Input 2bit filename",true );
+	setUp.finishSetUp(std::cout);
+	TwoBitFile f(inputFilename);
+	auto names  = f.sequenceNames();
+	for(const auto & name : names){
+		std::cout << name << std::endl;
+	}
+	return 0;
+}
+
+int TwoBitRunner::twoBitToFa(const bib::progutils::CmdArgs & inputCommands){
 	TwoBitSetUp setUp(inputCommands);
 	std::string inputFilename = "";
 	uint32_t width = 80;
@@ -30,9 +47,9 @@ int TwoBitRunner::twoBitToFa(std::map<std::string, std::string> inputCommands){
 		TwoBitFile f(inputFilename);
 		std::string buffer;
 		std::ofstream outfile;
-		std::ostream out(cppprogutils::determineOutBuf(outfile,outFilename, ".fasta", overWrite, false, true));
+		std::ostream out(bib::files::determineOutBuf(outfile,outFilename, ".fasta", overWrite, false, true));
 		for (const std::string& s : f.sequenceNames()) {
-			f[s].getSequence(buffer);
+			f[s]->getSequence(buffer);
 			out << ">" << s << std::endl;
 			for (uint32_t i = 0; i < buffer.size(); i += width) {
 				out << buffer.substr(i, width) << '\n';
@@ -46,47 +63,20 @@ int TwoBitRunner::twoBitToFa(std::map<std::string, std::string> inputCommands){
 }
 
 
-int TwoBitRunner::faToTwoBit(std::map<std::string, std::string> inputCommands) {
+int TwoBitRunner::faToTwoBit(const bib::progutils::CmdArgs & inputCommands) {
+	faToTwoBitPars pars;
 	TwoBitSetUp setUp(inputCommands);
-	std::string inputFilename = "";
-	std::string outFilename = "";
-	bool overWrite = false;
-	bool trimNameAtWhitepsace = false;
-	setUp.setOption(inputFilename, "--in,-i", "Input fasta filename, can be several files seperated by commas", true);
-	setUp.setOption(outFilename, "--out,-o",
+
+	setUp.setOption(pars.inputFilename, "--in,-i", "Input fasta filename, can be several files seperated by commas", true);
+	setUp.setOption(pars.outFilename, "--out,-o",
 			"Name of an output file", true);
-	setUp.setOption(overWrite, "--overWrite",
+	setUp.setOption(pars.overWrite, "--overWrite",
 			"Whether to overwrite the file if one is given by --out");
-	setUp.setOption(overWrite, "--overWrite",
-			"Whether to overwrite the file if one is given by --out");
-	setUp.setOption(trimNameAtWhitepsace, "--trimNameAtWhitepsace",
+	setUp.setOption(pars.leaveWhitespaceInName, "--leaveWhitespaceInName",
 				"Whether to trim the names of the fasta records at the first whitespace");
 	setUp.finishSetUp(std::cout);
-	cppprogutils::appendAsNeeded(outFilename, ".2bit");
-	std::ofstream out;
-	//check if output file exists
-	if (!overWrite && cppprogutils::fexists(outFilename)) {
-		throw Exception(__PRETTY_FUNCTION__,
-				"File " + outFilename
-						+ " already exists, use --overWrite to over write");
-	}
-	//read in seqs
-	std::vector<std::unique_ptr<FastaRecord>> seqs;
-	auto toks = cppprogutils::tokenizeString(inputFilename, ",");
-	for(const auto & fName : toks){
-		std::ifstream in(fName);
-		std::unique_ptr<FastaRecord> seq;
-		while (readNextFasta(in, seq, trimNameAtWhitepsace)) {
-			seqs.emplace_back(std::move(seq));
-		}
-	}
-	out.open(outFilename, std::ios::binary | std::ios::out);
-	//write out header
-	twoBitWriteHeader(seqs, out);
-	//write out sequences
-	for (const auto & seq : seqs) {
-		seq->twoBitWriteOne(out);
-	}
+
+	fastasToTwoBit(pars);
 	return 0;
 }
 

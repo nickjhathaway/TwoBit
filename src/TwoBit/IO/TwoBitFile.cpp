@@ -17,16 +17,17 @@
 #include "TwoBitFile.hpp"
 #include "TwoBit/objects/TwoBitSequence.hpp"
 
+#include <bibcpp/utils/utils.hpp>
 #include <algorithm>
 
 namespace TwoBit
 {
 
-TwoBitFile::TwoBitFile(const std::string& filename) :
+TwoBitFile::TwoBitFile(const bfs::path& filename) :
 		swapped_(false), magic_(0), version_(0), sequenceCount_(0), reserved_(
 				0), filename_(filename)
 {
-	file_.open(filename_, std::ios::in | std::ios::binary);
+	file_.open(filename_.string(), std::ios::in | std::ios::binary);
 	try {
 		readTwoBitHeader();
 		createSequenceMeta();
@@ -87,7 +88,7 @@ void TwoBitFile::createSequenceMeta()
 
 		// add meta data.
 		sequences_.emplace(seqNameStr,
-				TwoBitSequenceMeta(seqNameStr, offset, filename_, swapped_));
+				TwoBitSequenceMeta(seqNameStr, offset, filename_.string(), swapped_));
 		sequenceNames_.push_back(seqNameStr);
 	}
 }
@@ -146,11 +147,11 @@ void TwoBitFile::readRegions(std::vector<TwoBitSequenceMeta::Region>& out)
 			});
 }
 
-TwoBitSequence TwoBitFile::operator[](const std::string& s) const
+std::unique_ptr<TwoBitSequence> TwoBitFile::operator[](const std::string& s) const
 {
 	auto iter = sequences_.find(s);
-	if (iter != sequences_.end()) {
-		return (TwoBitSequence(iter->second));
+	if (sequences_.end() != iter) {
+		return std::make_unique<TwoBitSequence>(iter->second);
 	} else {
 		throw Exception(__PRETTY_FUNCTION__, "Unknown sequence '" + s + "'.");
 	}
@@ -161,12 +162,24 @@ const std::vector<std::string>& TwoBitFile::sequenceNames() const
 	return sequenceNames_;
 }
 
+bool TwoBitFile::hasSequenceName(const std::string & seqName) const{
+	return bib::in(seqName, sequenceNames_);
+}
+
+std::unordered_map<std::string, uint32_t> TwoBitFile::getSeqLens() const{
+	std::unordered_map<std::string, uint32_t> ret;
+	for(const auto & meta : sequences_){
+		ret[meta.first] = meta.second.dnaSize_;
+	}
+	return ret;
+}
+
 const uint32_t TwoBitFile::size() const
 {
 	return sequences_.size();
 }
 
-std::string TwoBitFile::getFilename() const{
+bfs::path TwoBitFile::getFilename() const{
 	return filename_;
 }
 

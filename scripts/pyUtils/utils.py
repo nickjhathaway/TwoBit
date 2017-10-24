@@ -42,8 +42,12 @@ class Utils:
                 exe_file = os.path.join(path, program)
                 if is_exe(exe_file):
                     return exe_file
-    
         return None
+    
+    @staticmethod
+    def hasProgram(program):
+        whichOutput = Utils.which(program);
+        return None != whichOutput;
     
     @staticmethod
     def run_in_dir(cmd, d):
@@ -160,6 +164,17 @@ class Utils:
         print "untarring", CT.boldGreen(fnp), "to", CT.boldBlue(d)
         tar.extractall(d)
         tar.close()
+        
+    @staticmethod
+    def getStrFromStrOrList(inputArg):
+        if type(inputArg) is list:
+            return str(inputArg[0])
+        elif type(inputArg) is not str:
+            return str(inputArg)
+        else:
+            return inputArg
+          
+        
 
     @staticmethod
     def clear_dir(d):
