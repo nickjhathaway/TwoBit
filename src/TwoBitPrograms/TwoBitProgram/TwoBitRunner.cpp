@@ -15,7 +15,7 @@ TwoBitRunner::TwoBitRunner()
 	addFunc("twoBitToFa", twoBitToFa, false),
   addFunc("faToTwoBit", faToTwoBit, false),
 	addFunc("getTwobitNames", getTwobitNames, false)},
-                    "TwoBit",  "3", "0", "0-dev") {}
+                    "TwoBit",  "2", "0", "5") {}
 
 
 int TwoBitRunner::getTwobitNames(const bib::progutils::CmdArgs & inputCommands){
