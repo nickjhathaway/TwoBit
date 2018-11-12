@@ -5,7 +5,7 @@
 #include <string.h>
 #include <cstdint>
 #include <limits>
-#include <bibcpp.h>
+#include <njhcpp.h>
 #include "TwoBit/err/Exception.hpp"
 #include "TwoBit/IO/fasta.hpp"
 
@@ -54,7 +54,7 @@ void twoBitWriteHeader(const std::vector<std::unique_ptr<FastaRecord>> & seqs, s
 }
 
 void fastasToTwoBit(const faToTwoBitPars & pars){
-	std::string outName = bib::appendAsNeededRet(pars.outFilename, ".2bit");
+	std::string outName = njh::appendAsNeededRet(pars.outFilename, ".2bit");
 
 	std::ofstream out;
 	//check if output file exists
@@ -66,7 +66,7 @@ void fastasToTwoBit(const faToTwoBitPars & pars){
 	//read in seqs
 	//input file name can be multiple files to combine into one 2bit, should be comma separated
 	std::vector<std::unique_ptr<FastaRecord>> seqs;
-	auto toks = bib::tokenizeString(pars.inputFilename, ",");
+	auto toks = njh::tokenizeString(pars.inputFilename, ",");
 	for(const auto & fName : toks){
 		if(!bfs::exists(fName)){
 			std::stringstream ss;

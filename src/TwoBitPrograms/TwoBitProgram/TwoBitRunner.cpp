@@ -11,14 +11,14 @@
 namespace TwoBit {
 
 TwoBitRunner::TwoBitRunner()
-    : bib::progutils::ProgramRunner ({
+    : njh::progutils::ProgramRunner ({
 	addFunc("twoBitToFa", twoBitToFa, false),
   addFunc("faToTwoBit", faToTwoBit, false),
 	addFunc("getTwobitNames", getTwobitNames, false)},
                     "TwoBit",  "2", "0", "6") {}
 
 
-int TwoBitRunner::getTwobitNames(const bib::progutils::CmdArgs & inputCommands){
+int TwoBitRunner::getTwobitNames(const njh::progutils::CmdArgs & inputCommands){
 	std::string inputFilename = "";
 	TwoBitSetUp setUp(inputCommands);
 
@@ -32,7 +32,7 @@ int TwoBitRunner::getTwobitNames(const bib::progutils::CmdArgs & inputCommands){
 	return 0;
 }
 
-int TwoBitRunner::twoBitToFa(const bib::progutils::CmdArgs & inputCommands){
+int TwoBitRunner::twoBitToFa(const njh::progutils::CmdArgs & inputCommands){
 	TwoBitSetUp setUp(inputCommands);
 	std::string inputFilename = "";
 	uint32_t width = 80;
@@ -47,7 +47,7 @@ int TwoBitRunner::twoBitToFa(const bib::progutils::CmdArgs & inputCommands){
 		TwoBitFile f(inputFilename);
 		std::string buffer;
 		std::ofstream outfile;
-		std::ostream out(bib::files::determineOutBuf(outfile,outFilename, ".fasta", overWrite, false, true));
+		std::ostream out(njh::files::determineOutBuf(outfile,outFilename, ".fasta", overWrite, false, true));
 		for (const std::string& s : f.sequenceNames()) {
 			f[s]->getSequence(buffer);
 			out << ">" << s << std::endl;
@@ -63,7 +63,7 @@ int TwoBitRunner::twoBitToFa(const bib::progutils::CmdArgs & inputCommands){
 }
 
 
-int TwoBitRunner::faToTwoBit(const bib::progutils::CmdArgs & inputCommands) {
+int TwoBitRunner::faToTwoBit(const njh::progutils::CmdArgs & inputCommands) {
 	faToTwoBitPars pars;
 	TwoBitSetUp setUp(inputCommands);
 
@@ -81,4 +81,4 @@ int TwoBitRunner::faToTwoBit(const bib::progutils::CmdArgs & inputCommands) {
 }
 
                     
-} // namespace bibseq
+} // namespace njhseq

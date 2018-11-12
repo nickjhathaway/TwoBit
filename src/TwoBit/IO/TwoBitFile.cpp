@@ -17,7 +17,7 @@
 #include "TwoBitFile.hpp"
 #include "TwoBit/objects/TwoBitSequence.hpp"
 
-#include <bibcpp/utils/utils.hpp>
+#include <njhcpp/utils/utils.hpp>
 #include <algorithm>
 
 namespace TwoBit
@@ -163,7 +163,7 @@ const std::vector<std::string>& TwoBitFile::sequenceNames() const
 }
 
 bool TwoBitFile::hasSequenceName(const std::string & seqName) const{
-	return bib::in(seqName, sequenceNames_);
+	return njh::in(seqName, sequenceNames_);
 }
 
 std::unordered_map<std::string, uint32_t> TwoBitFile::getSeqLens() const{
