@@ -1,5 +1,5 @@
 # 2-bit reader/writer
-Version 2.0.6
+Version 2.0.7
 
 
 This is a (work in progress) reader implementation, based on the
@@ -14,7 +14,7 @@ git clone https://github.com/weng-lab/TwoBit.git
 cd TwoBit
 git checkout -b develop origin/develop #switch to develop branch
 #configure, compiler can be set or environmental CC and CXX will be used
-CC=clang-3.8 CXX=clang++-3.8 ./configure.py 
+CC=gcc-7 CXX=g++-7 ./configure.py 
 #download cppitertools, cppprogutils
 ./setup.py --compfile compfile.mk --outMakefile makefile-common.mk #compfile.mk created by configure
 #compile
