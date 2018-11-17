@@ -15,7 +15,7 @@ TwoBitRunner::TwoBitRunner()
 	addFunc("twoBitToFa", twoBitToFa, false),
   addFunc("faToTwoBit", faToTwoBit, false),
 	addFunc("getTwobitNames", getTwobitNames, false)},
-                    "TwoBit",  "2", "0", "6") {}
+                    "TwoBit",  "2", "0", "7") {}
 
 
 int TwoBitRunner::getTwobitNames(const njh::progutils::CmdArgs & inputCommands){

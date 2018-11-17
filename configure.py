@@ -7,7 +7,7 @@ from utils import Utils
 from genFuncs import genHelper
 def main():
     name = "TwoBit"
-    libs = "njhcpp:develop"
+    libs = "njhcpp:v2.6.0"
     args = genHelper.parseNjhConfigureArgs()
     cmd = genHelper.mkConfigCmd(name, libs, sys.argv)
     Utils.run(cmd)
