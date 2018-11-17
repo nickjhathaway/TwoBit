@@ -1,16 +1,16 @@
 #pragma once
 
-#include <bibcpp.h>
+#include <njhcpp.h>
 
 namespace TwoBit {
 
-class TwoBitRunner : public bib::progutils::ProgramRunner {
+class TwoBitRunner : public njh::progutils::ProgramRunner {
  public:
   TwoBitRunner();
   
-  static int twoBitToFa(const bib::progutils::CmdArgs & inputCommands);
-  static int getTwobitNames(const bib::progutils::CmdArgs & inputCommands);
-  static int faToTwoBit(const bib::progutils::CmdArgs & inputCommands);
+  static int twoBitToFa(const njh::progutils::CmdArgs & inputCommands);
+  static int getTwobitNames(const njh::progutils::CmdArgs & inputCommands);
+  static int faToTwoBit(const njh::progutils::CmdArgs & inputCommands);
 
 };
 } // namespace TwoBit
