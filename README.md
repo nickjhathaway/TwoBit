@@ -1,5 +1,5 @@
 # 2-bit reader/writer
-Version 2.0.10-dev
+Version 2.1.0
 
 
 This is a (work in progress) reader implementation, based on the
