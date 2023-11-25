@@ -43,3 +43,4 @@ TAGS
 /build/*
 
 compfile.mk
+.idea
