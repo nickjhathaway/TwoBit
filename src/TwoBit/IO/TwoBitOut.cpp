@@ -73,7 +73,7 @@ void fastasToTwoBit(const faToTwoBitPars & pars){
 			ss << __PRETTY_FUNCTION__ << ", Error input file name " << fName << " doesn't exist" << std::endl;
 			throw std::runtime_error{ss.str()};
 		}
-		std::ifstream in(fName);
+		njh::InputStream in{bfs::path(fName)};
 		std::unique_ptr<FastaRecord> seq;
 		try {
 			while (readNextFasta(in, seq, !pars.leaveWhitespaceInName)) {
